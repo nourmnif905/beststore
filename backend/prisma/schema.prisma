@@ -1,41 +1,15 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-enum ProductStatus {
-  in_stock    // en stock
-  sur_commande    // sur commande
-}
-model Product {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String
-  price       Float
-  photo       String
-  index       Int           @unique
-  createdAt   DateTime      @default(now())
-  status      ProductStatus @default(in_stock)
-
-  cartItems   CartItem[]    // relation inverse
-}
-model Cart {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime   @default(now())
-  isOrdered Boolean    @default(false)
-  items     CartItem[] // 👈 Relation inverse
-}
-
-model CartItem {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-
-  cartId    String   @db.ObjectId
-  productId String   @db.ObjectId
-  quantity  Int      @default(1)
-
-  cart      Cart     @relation(fields: [cartId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
 }
