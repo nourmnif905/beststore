@@ -1,0 +1,17 @@
+# Frontend
+/front/node_modules
+/front/www
+/front/.angular
+/front/.idea
+/front/.vscode
+/front/dist
+/front/.env
+
+# Backend
+/backend/node_modules
+/backend/dist
+/backend/.env
+
+# General
+.DS_Store
+.env
