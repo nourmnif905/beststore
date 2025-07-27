@@ -13,7 +13,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   totalSlides: number = 3;
   isAnimating: boolean = false;
   autoPlayInterval: any = null;
-  autoPlayDelay: number = 3000; 
+  autoPlayDelay: number = 4000; 
 
   slides = [
     {
