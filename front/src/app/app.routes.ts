@@ -9,5 +9,9 @@ export const routes: Routes = [
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',
+  },  {
+    path: 'mobile',
+    loadComponent: () => import('./mobile/mobile/mobile.page').then( m => m.MobilePage)
   },
+
 ];

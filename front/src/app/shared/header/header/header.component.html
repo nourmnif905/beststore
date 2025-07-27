@@ -36,7 +36,14 @@
 <!-- Navigation -->
 <nav class="nav-bar">
   <a href="#">Ordinateurs</a>
-  <a href="#">Smartphones</a>
+  <a 
+  routerLink="/mobile" 
+  routerLinkActive="active-link" 
+  [routerLinkActiveOptions]="{ exact: true }"
+>
+  Smartphones
+</a>
+
   <a href="#">Tablettes</a>
   <a href="#">Gaming</a>
   <a href="#">Audio</a>

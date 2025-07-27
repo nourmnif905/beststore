@@ -41,20 +41,20 @@ export class ProductService {
   }
 
    async getProductsByFilters(dto: SearchByNameDto) {
-    const { prefix, minPrice = 0, maxPrice, orderBy } = dto;
+    console.log('Filtres reçus :', dto);
+   const minPrice = dto.minPrice !== undefined ? Number(dto.minPrice) : 0;
+  const maxPrice = dto.maxPrice !== undefined ? Number(dto.maxPrice) : await this.getMaxPrice();
+  const prefix = dto.prefix ?? '';
+  const orderBy = dto.orderBy;
 
-    // Récupérer le max price si pas défini
-    const priceLimit = maxPrice ?? (await this.getMaxPrice());
-
-    // 1) Récupérer produits filtrés par prix
-    const products = await this.prisma.product.findMany({
-      where: {
-        price: {
-          gte: minPrice,
-          lte: priceLimit,
-        },
+  const products = await this.prisma.product.findMany({
+    where: {
+      price: {
+        gte: minPrice,
+        lte: maxPrice,
       },
-    });
+    },
+  });
 
     // 2) Si pas de recherche texte, juste trier la liste entière
     if (!prefix || prefix.trim() === '') {

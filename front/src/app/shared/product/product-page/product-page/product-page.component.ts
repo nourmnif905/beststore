@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RequestService } from 'src/app/service/services/request.service';
+import { RequestService } from 'src/app/service/requestservice';
 import { ProductCardComponent } from '../../product-card/product-card/product-card.component';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
