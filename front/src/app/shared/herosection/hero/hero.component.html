@@ -1,0 +1,17 @@
+<section class="hero-section">
+  <div class="arrow left" (click)="prevSlide()">‹</div>
+
+  <div class="hero-slide">
+    <div class="hero-text">
+      <h2>{{ slides[currentIndex].title }}</h2>
+      <p>{{ slides[currentIndex].text }}</p>
+      <button>Voir les promotions</button>
+    </div>
+
+    <div class="hero-image-wrapper">
+      <img [src]="slides[currentIndex].image" alt="Hero Image" />
+    </div>
+  </div>
+
+  <div class="arrow right" (click)="nextSlide()">›</div>
+</section>
