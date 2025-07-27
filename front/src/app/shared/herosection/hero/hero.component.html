@@ -1,17 +1,134 @@
-<section class="hero-section">
-  <div class="arrow left" (click)="prevSlide()">‹</div>
 
-  <div class="hero-slide">
-    <div class="hero-text">
-      <h2>{{ slides[currentIndex].title }}</h2>
-      <p>{{ slides[currentIndex].text }}</p>
-      <button>Voir les promotions</button>
+<section class="hero-carousel">
+    <div class="carousel-container">
+        <div class="carousel-slide active" [ngClass]="getSlideClass(1)" data-slide="1">
+            <div class="container">
+                <div class="row align-items-center carousel-height">
+                    <div class="col-lg-6">
+                        <div class="hero-content">
+                            <h1 class="hero-title">{{ slides[0].title }}</h1>
+                            <p class="hero-subtitle">{{ slides[0].subtitle }}</p>
+                            <button class="btn btn-cta" (click)="onCtaClick(slides[0].type)">
+                                <i class="{{ slides[0].buttonIcon }} me-2"></i>{{ slides[0].buttonText }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="hero-image">
+                            <div class="tech-setup">
+                                <div class="device laptop">
+                                    <i class="fas fa-laptop fa-4x"></i>
+                                </div>
+                                <div class="device headphones">
+                                    <i class="fas fa-headphones fa-3x"></i>
+                                </div>
+                                <div class="device smartphone">
+                                    <i class="fas fa-mobile-alt fa-2x"></i>
+                                </div>
+                                <div class="device tablet">
+                                    <i class="fas fa-tablet-alt fa-2x"></i>
+                                </div>
+                                <div class="device mouse">
+                                    <i class="fas fa-mouse fa-lg"></i>
+                                </div>
+                                <div class="device keyboard">
+                                    <i class="fas fa-keyboard fa-lg"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-slide" [ngClass]="getSlideClass(2)" data-slide="2">
+            <div class="container">
+                <div class="row align-items-center carousel-height">
+                    <div class="col-lg-6">
+                        <div class="hero-content">
+                            <h1 class="hero-title">{{ slides[1].title }}</h1>
+                            <p class="hero-subtitle">{{ slides[1].subtitle }}</p>
+                            <button class="btn btn-cta" (click)="onCtaClick(slides[1].type)">
+                                <i class="{{ slides[1].buttonIcon }} me-2"></i>{{ slides[1].buttonText }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="hero-image">
+                            <div class="tech-setup gaming">
+                                <div class="device gaming-chair">
+                                    <i class="fas fa-chair fa-4x"></i>
+                                </div>
+                                <div class="device monitor">
+                                    <i class="fas fa-desktop fa-3x"></i>
+                                </div>
+                                <div class="device gamepad">
+                                    <i class="fas fa-gamepad fa-2x"></i>
+                                </div>
+                                <div class="device microphone">
+                                    <i class="fas fa-microphone fa-2x"></i>
+                                </div>
+                                <div class="device webcam">
+                                    <i class="fas fa-video fa-lg"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-slide" [ngClass]="getSlideClass(3)" data-slide="3">
+            <div class="container">
+                <div class="row align-items-center carousel-height">
+                    <div class="col-lg-6">
+                        <div class="hero-content">
+                            <h1 class="hero-title">{{ slides[2].title }}</h1>
+                            <p class="hero-subtitle">{{ slides[2].subtitle }}</p>
+                            <button class="btn btn-cta" (click)="onCtaClick(slides[2].type)">
+                                <i class="{{ slides[2].buttonIcon }} me-2"></i>{{ slides[2].buttonText }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="hero-image">
+                            <div class="tech-setup smart-home">
+                                <div class="device smart-speaker">
+                                    <i class="fas fa-volume-up fa-3x"></i>
+                                </div>
+                                <div class="device smart-bulb">
+                                    <i class="fas fa-lightbulb fa-2x"></i>
+                                </div>
+                                <div class="device security-camera">
+                                    <i class="fas fa-video fa-2x"></i>
+                                </div>
+                                <div class="device thermostat">
+                                    <i class="fas fa-thermometer-half fa-2x"></i>
+                                </div>
+                                <div class="device smart-lock">
+                                    <i class="fas fa-lock fa-lg"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="hero-image-wrapper">
-      <img [src]="slides[currentIndex].image" alt="Hero Image" />
+    <button class="carousel-nav prev" (click)="onPrevClick()">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="carousel-nav next" (click)="onNextClick()">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="carousel-indicators">
+        <button 
+            *ngFor="let slide of slides; let i = index"
+            class="indicator"
+            [class.active]="isIndicatorActive(slide.id)"
+            (click)="onIndicatorClick(slide.id)">
+        </button>
     </div>
-  </div>
-
-  <div class="arrow right" (click)="nextSlide()">›</div>
 </section>
