@@ -26,5 +26,9 @@ export class ProductController {
   async searchProductsWithFilter(@Body() dto: SearchByNameDto) {
     return this.productService.getProductsByFilters(dto);
   }
+    @Get('max-price')
+  async getMaxPrice(): Promise<number> {
+    return this.productService.getMaxPrice();
+  }
 }
 
