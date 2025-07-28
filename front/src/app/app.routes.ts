@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -10,4 +11,10 @@ export const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full',
   },
+  {
+    path: 'mobile',
+    loadComponent: () => import('./mobile/mobile/mobile.page').then( m => m.MobilePage)
+  },
+
 ];
+

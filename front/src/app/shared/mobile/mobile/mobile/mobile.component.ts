@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { RequestService } from 'src/app/service/requestservice';
+import { RequestService } from 'src/app/service/request.service';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
-import { ProductCardComponent } from '../../product/product-card/product-card/product-card.component';
+import { ProductCardComponent } from 'src/app/shared/product/product-card/product-card/product-card.component';
 
 
 @Component({

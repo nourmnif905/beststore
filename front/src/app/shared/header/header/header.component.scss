@@ -137,3 +137,13 @@ body {
 .nav-bar a:hover {
   color: #0ea5e9;
 }
+a {
+  text-decoration: none;
+  color: #000; /* noir par défaut */
+}
+
+a.active-link {
+  color: #0ea5e9 !important; /* BLEU, et forcé */
+  text-decoration: none;
+  font-weight: bold;
+}
