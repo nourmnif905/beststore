@@ -21,14 +21,16 @@ export class ProductController {
     return this.productService.pingDb();
   }
 
-  // Correction ici : GET + @Query()
+  // ✅ Correction ici : GET + @Query()
   @Get('search-filter')
-  async searchProductsWithFilter(@Body() dto: SearchByNameDto) {
+  async searchProductsWithFilter(@Query() dto: SearchByNameDto) {
     return this.productService.getProductsByFilters(dto);
   }
-    @Get('max-price')
-  async getMaxPrice(): Promise<number> {
-    return this.productService.getMaxPrice();
+
+  // ✅ Nouvelle route : obtenir le prix max
+  @Get('max-price')
+  async getMaxPrice() {
+    const max = await this.productService.getMaxPrice();
+    return { max };
   }
 }
-

@@ -3,12 +3,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto, SearchByNameDto } from './dto';
 import { ProductStatus } from '@prisma/client';
 
-// ✅ CORRECTION : utiliser require() au lieu de import
+// ✅ Utilise require pour Fuse.js
 const Fuse = require('fuse.js');
 
 @Injectable()
 export class ProductService {
   constructor(private prisma: PrismaService) {}
+
   private async getNextIndex(): Promise<number> {
     const lastProduct = await this.prisma.product.findFirst({
       orderBy: { createdAt: 'desc' },
@@ -17,15 +18,15 @@ export class ProductService {
   }
 
   async createProduct(dto: CreateProductDto) {
-  const nextIndex = await this.getNextIndex();
-  return this.prisma.product.create({
-    data: {
-      ...dto,
-      index: nextIndex,
-      status: dto.status ? dto.status.toLowerCase() as ProductStatus : 'in_stock', // ou autre valeur par défaut
-    },
-  });
-}
+    const nextIndex = await this.getNextIndex();
+    return this.prisma.product.create({
+      data: {
+        ...dto,
+        index: nextIndex,
+        status: dto.status ? dto.status.toLowerCase() as ProductStatus : 'in_stock',
+      },
+    });
+  }
 
   async getAllProducts() {
     return this.prisma.product.findMany({ orderBy: { index: 'asc' } });
@@ -40,18 +41,20 @@ export class ProductService {
     }
   }
 
-   async getProductsByFilters(dto: SearchByNameDto) {
-    const { prefix, minPrice = 0, maxPrice, orderBy } = dto;
+  async getProductsByFilters(dto: SearchByNameDto) {
+    console.log('Filtres reçus :', dto);
 
-    // Récupérer le max price si pas défini
-    const priceLimit = maxPrice ?? (await this.getMaxPrice());
+    const minPrice = dto.minPrice !== undefined ? Number(dto.minPrice) : 0;
+    const maxPrice = dto.maxPrice !== undefined ? Number(dto.maxPrice) : await this.getMaxPrice();
+    const prefix = dto.prefix ?? '';
+    const orderBy = dto.orderBy;
 
     // 1) Récupérer produits filtrés par prix
     const products = await this.prisma.product.findMany({
       where: {
         price: {
           gte: minPrice,
-          lte: priceLimit,
+          lte: maxPrice,
         },
       },
     });
@@ -75,27 +78,25 @@ export class ProductService {
   }
 
   private sortProducts(products: any[], orderBy?: string) {
-  switch (orderBy) {
-    case 'name_asc':
-      return products.sort((a, b) => a.title.localeCompare(b.title));
-    case 'name_desc':
-      return products.sort((a, b) => b.title.localeCompare(a.title));
-    case 'price_asc':
-      return products.sort((a, b) => a.price - b.price);
-    case 'price_desc':
-      return products.sort((a, b) => b.price - a.price);
-    case 'in_stock':
-      return products.sort((a, b) => {
-        if (a.status === 'in_stock' && b.status !== 'in_stock') return -1;
-        if (b.status === 'in_stock' && a.status !== 'in_stock') return 1;
-        return 0;
-      });
-    default:
-      return products;
+    switch (orderBy) {
+      case 'name_asc':
+        return products.sort((a, b) => a.title.localeCompare(b.title));
+      case 'name_desc':
+        return products.sort((a, b) => b.title.localeCompare(a.title));
+      case 'price_asc':
+        return products.sort((a, b) => a.price - b.price);
+      case 'price_desc':
+        return products.sort((a, b) => b.price - a.price);
+      case 'in_stock':
+        return products.sort((a, b) => {
+          if (a.status === 'in_stock' && b.status !== 'in_stock') return -1;
+          if (b.status === 'in_stock' && a.status !== 'in_stock') return 1;
+          return 0;
+        });
+      default:
+        return products;
+    }
   }
-}
-
-
 
   async getMaxPrice(): Promise<number> {
     const result = await this.prisma.product.aggregate({

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RequestService } from 'src/app/service/services/request.service';
+import { RequestService } from 'src/app/service/request.service';
 import { ProductCardComponent } from '../../product-card/product-card/product-card.component';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { provideHttpClient } from '@angular/common/http'; 
+import { provideHttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-page',
@@ -42,7 +42,7 @@ export class ProductPageComponent  implements OnInit {
     this.requestService.get('products/get_all', this.filters).subscribe({
       next: (res) => {
         console.log(res);
-          
+
         this.products = res
       },
 
