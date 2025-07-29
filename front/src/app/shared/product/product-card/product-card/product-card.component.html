@@ -18,7 +18,9 @@
     <!-- Prix + bouton -->
     <div class="d-flex justify-content-between align-items-center">
       <span class="price fw-bold text-dark fs-5 mb-0 me-3">{{ product.price }} <small class="text-muted">TND</small></span>
-      <button class="btn btn-custom text-white px-3 py-2 rounded-pill">Add to Cart</button>
+      <button class="btn btn-custom text-white px-3 py-2 rounded-pill" (click)="addToCart(product.id)">Add to Cart</button>
+      <!-- ex: product-card.component.html -->
+
     </div>
   </div>
 </div>

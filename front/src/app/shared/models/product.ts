@@ -1,6 +1,7 @@
 export type ProductStatus = 'IN_STOCK' | 'ON_ORDER';
 
 export interface Product {
+  id: string;  
   title: string;
   description: string;
   price: number;

@@ -24,12 +24,20 @@
       </button>
     </div>
 
-    <div class="header-actions">
-      <a href="#" class="cart-btn">
-        <i class="fa fa-shopping-cart"></i>
-        <span>Panier</span>
-      </a>
-    </div>
+  
+
+<div class="header-actions" style="position: relative;">
+  <a href="#" class="cart-btn" (click)="toggleCart(); $event.preventDefault()">
+    <i class="fa fa-shopping-cart fa-2x"></i>
+    <span class="badge" *ngIf="totalItems > 0">{{ totalItems }}</span>
+  </a>
+
+  <!-- Modal panier -->
+  <app-cart-modal *ngIf="showCart" (close)="toggleCart()"></app-cart-modal>
+</div>
+
+
+
   </div>
 </header>
 

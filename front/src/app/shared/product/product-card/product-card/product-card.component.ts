@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Product } from 'src/app/shared/models/product';
 import { CommonModule } from '@angular/common';
+import { CartService } from 'src/app/service/services/cart.service';
 @Component({
   selector: 'app-product-card',
   templateUrl: './product-card.component.html',
@@ -8,6 +9,7 @@ import { CommonModule } from '@angular/common';
   imports:[CommonModule]
 })
 export class ProductCardComponent {
+  constructor(private cartService: CartService) {}
    @Input() product!: Product;
      showModal = false;
 
@@ -19,5 +21,7 @@ export class ProductCardComponent {
   closeModal() {
     this.showModal = false;
   }
-  
+   addToCart(productId: string) {
+    this.cartService.addToCart(productId);
+  }
 }

@@ -1,0 +1,188 @@
+/* Fond semi-transparent */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+
+/* Modal principal */
+.cart-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 450px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  padding: 24px;
+  animation: fadeInScale 0.3s ease-in-out;
+  font-family: "Segoe UI", sans-serif;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translate(-50%, -50%);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translate(-50%, -50%);
+  }
+}
+
+/* En-tête */
+.cart-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cart-modal-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #2563eb;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover {
+  color: #000;
+}
+
+/* Produits */
+.cart-items {
+  margin-bottom: 15px;
+}
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: #f5f8ff;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.cart-item img {
+  border-radius: 8px;
+}
+.cart-item-info {
+  flex-grow: 1;
+}
+.cart-item-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.cart-item-price {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* Bouton supprimer */
+.remove-item-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+.remove-item-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Total */
+.total-price-section {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e3a8a;
+  margin-bottom: 10px;
+}
+
+/* Bouton confirmer */
+.confirm-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+.confirm-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Formulaire de commande */
+.confirm-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+.confirm-form .error {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+/* Panier vide */
+.empty-cart-text {
+  text-align: center;
+  color: #666;
+  padding: 20px 0;
+  font-size: 1rem;
+}
+
+.card-confirmation {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.card-confirmation .card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #1e3a8a; /* bleu foncé */
+}
+
+.card-confirmation .form-input {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.card-confirmation .error {
+  color: #dc2626; /* rouge */
+  font-size: 12px;
+  margin-bottom: 8px;
+}
