@@ -13,7 +13,7 @@ async function bootstrap() {
 
   // Start the server on port 3111
   await app.listen(3000);
-  console.log(`🚀 Server running on http://localhost:3111`);
+  console.log(`🚀 Server running on http://localhost:3000`);
 }
 
 bootstrap();
