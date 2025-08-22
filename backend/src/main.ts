@@ -4,14 +4,16 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Autoriser toutes les origines (ou adapte l'URL si besoin)
+  // Enable CORS (e.g., for Ionic or frontend access)
   app.enableCors({
-    origin: 'http://localhost:8100', // ou '*' pour tout autoriser
+    origin: 'http://localhost:8100', // frontend origin (e.g., Ionic app)
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
 
-  await app.listen(3111);
+  // Start the server on port 3111
+  await app.listen(3000);
+  console.log(`🚀 Server running on http://localhost:3111`);
 }
 
 bootstrap();
