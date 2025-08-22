@@ -7,27 +7,27 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Post()
+  @Post('createCategory')
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
 
-  @Get()
+  @Get('get_all')
   findAll() {
     return this.categoryService.findAll();
   }
 
-  @Get(':name')
+  @Get('getOneCategory/:name')
   findOne(@Param('id') id: string) {
     return this.categoryService.findOne("name");
   }
 
-  @Patch('name')
+  @Post('updateCategory/:name')
   update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
     return this.categoryService.update("name", updateCategoryDto);
   }
 
-  @Delete('name')
+  @Delete('deleteCategory/:name')
   remove(@Param('id') id: string) {
     return this.categoryService.remove("name");
   }
