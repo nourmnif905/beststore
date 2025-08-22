@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto, SearchByNameDto } from './dto';
 import { ProductStatus } from '@prisma/client';
 
-// ✅ Utilise require pour Fuse.js
+// ✅ Import Fuse.js using require (for CommonJS compatibility)
 const Fuse = require('fuse.js');
 
 @Injectable()
@@ -14,42 +14,47 @@ export class ProductService {
     const lastProduct = await this.prisma.product.findFirst({
       orderBy: { createdAt: 'desc' },
     });
-    return lastProduct ? lastProduct.index + 1 : 1;
+    return lastProduct?.index ? lastProduct.index + 1 : 1;
   }
 
-  async createProduct(dto: CreateProductDto) {
-    const nextIndex = await this.getNextIndex();
-    return this.prisma.product.create({
-      data: {
-        ...dto,
-        index: nextIndex,
-        status: dto.status ? dto.status.toLowerCase() as ProductStatus : 'in_stock',
-      },
-    });
-  }
+async createProduct(dto: CreateProductDto) {
+  const nextIndex = await this.getNextIndex();
+
+  return this.prisma.product.create({
+    data: {
+      name: dto.name,
+      description: dto.description,
+      price: dto.price,
+      image: dto.image,
+      index: nextIndex,
+      status: (dto.status?.toUpperCase() as ProductStatus) || ProductStatus.SUR_COMMANDE,
+      categoryName: dto.categoryName,  // <-- pass the foreign key directly
+      // NO nested connect here
+    },
+  });
+}
 
   async getAllProducts() {
-    return this.prisma.product.findMany({ orderBy: { index: 'asc' } });
+    return this.prisma.product.findMany({
+      orderBy: { index: 'asc' },
+    });
   }
 
   async pingDb() {
     try {
-      const result = await this.prisma.$runCommandRaw({ ping: 1 });
-      return { connected: true, result };
+      await this.prisma.$connect();
+      return { connected: true };
     } catch (error) {
       return { connected: false, error };
     }
   }
 
   async getProductsByFilters(dto: SearchByNameDto) {
-    console.log('Filtres reçus :', dto);
-
     const minPrice = dto.minPrice !== undefined ? Number(dto.minPrice) : 0;
     const maxPrice = dto.maxPrice !== undefined ? Number(dto.maxPrice) : await this.getMaxPrice();
     const prefix = dto.prefix ?? '';
     const orderBy = dto.orderBy;
 
-    // 1) Récupérer produits filtrés par prix
     const products = await this.prisma.product.findMany({
       where: {
         price: {
@@ -59,38 +64,35 @@ export class ProductService {
       },
     });
 
-    // 2) Si pas de recherche texte, juste trier la liste entière
     if (!prefix || prefix.trim() === '') {
       return this.sortProducts(products, orderBy);
     }
 
-    // 3) Recherche floue avec Fuse.js
     const fuse = new Fuse(products, {
-      keys: ['title', 'description'],
+      keys: ['name', 'description'],
       threshold: 0.3,
     });
 
     const fuseResults = fuse.search(prefix);
     const filteredProducts = fuseResults.map(result => result.item);
 
-    // 4) Trier les résultats filtrés
     return this.sortProducts(filteredProducts, orderBy);
   }
 
   private sortProducts(products: any[], orderBy?: string) {
     switch (orderBy) {
       case 'name_asc':
-        return products.sort((a, b) => a.title.localeCompare(b.title));
+        return products.sort((a, b) => a.name.localeCompare(b.name));
       case 'name_desc':
-        return products.sort((a, b) => b.title.localeCompare(a.title));
+        return products.sort((a, b) => b.name.localeCompare(a.name));
       case 'price_asc':
         return products.sort((a, b) => a.price - b.price);
       case 'price_desc':
         return products.sort((a, b) => b.price - a.price);
       case 'in_stock':
         return products.sort((a, b) => {
-          if (a.status === 'in_stock' && b.status !== 'in_stock') return -1;
-          if (b.status === 'in_stock' && a.status !== 'in_stock') return 1;
+          if (a.status === ProductStatus.AVAILABLE && b.status !== ProductStatus.AVAILABLE) return -1;
+          if (b.status === ProductStatus.AVAILABLE && a.status !== ProductStatus.AVAILABLE) return 1;
           return 0;
         });
       default:
@@ -100,9 +102,7 @@ export class ProductService {
 
   async getMaxPrice(): Promise<number> {
     const result = await this.prisma.product.aggregate({
-      _max: {
-        price: true,
-      },
+      _max: { price: true },
     });
     return result._max.price ?? 0;
   }

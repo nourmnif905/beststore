@@ -1,10 +1,15 @@
 import { Type } from 'class-transformer';
 import { IsString, IsNotEmpty, IsNumber, IsPositive, IsEnum, MinLength, IsOptional, Min, IsIn } from 'class-validator';
 
+export enum ProductStatus {
+  IN_STOCK = 'IN_STOCK',
+  ON_ORDER = 'ON_ORDER',
+}
+
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  name: string;
 
   @IsString()
   @IsNotEmpty()
@@ -16,12 +21,16 @@ export class CreateProductDto {
 
   @IsString()
   @IsNotEmpty()
-  photo: string; // ex: URL de l’image ou nom du fichier
+  image: string;
 
-  @IsEnum(['IN_STOCK', 'ON_ORDER'])
-  status: 'IN_STOCK' | 'ON_ORDER';
-  
+  @IsEnum(ProductStatus)
+  status: ProductStatus;
+
+  @IsNumber()
+  @IsPositive()
+  categoryName :string ;
 }
+
 
 export class SearchByNameDto {
   @IsOptional()

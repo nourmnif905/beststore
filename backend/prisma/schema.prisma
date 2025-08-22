@@ -1,15 +1,36 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+// ✅ Connect to your DB
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+// ✅ Tell Prisma to generate the client
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  products  Product[]
+}
+model Product {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  price       Float
+  categoryName String
+  image       String?
+  index       Int?
+  stock       Int      @default(0)
+  status ProductStatus @default(SUR_COMMANDE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  category    Category @relation(fields: [categoryName], references: [name])
+}
+enum ProductStatus {
+  AVAILABLE
+  SUR_COMMANDE
 }
