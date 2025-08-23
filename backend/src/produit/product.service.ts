@@ -49,35 +49,48 @@ async createProduct(dto: CreateProductDto) {
     }
   }
 
-  async getProductsByFilters(dto: SearchByNameDto) {
-    const minPrice = dto.minPrice !== undefined ? Number(dto.minPrice) : 0;
-    const maxPrice = dto.maxPrice !== undefined ? Number(dto.maxPrice) : await this.getMaxPrice();
-    const prefix = dto.prefix ?? '';
-    const orderBy = dto.orderBy;
+async getProductsByFilters(dto: SearchByNameDto) {
+  const minPrice = dto.minPrice !== undefined ? Number(dto.minPrice) : 0;
+  const maxPrice = dto.maxPrice !== undefined ? Number(dto.maxPrice) : await this.getMaxPrice();
+  const prefix = dto.prefix?.trim() ?? '';
+  const orderBy = dto.orderBy;
+  const categoryName = dto.categoryName;
 
-    const products = await this.prisma.product.findMany({
-      where: {
-        price: {
-          gte: minPrice,
-          lte: maxPrice,
-        },
-      },
-    });
+  // Build Prisma query filters
+  const filters: any = {
+    price: {
+      gte: minPrice,
+      lte: maxPrice,
+    },
+  };
 
-    if (!prefix || prefix.trim() === '') {
-      return this.sortProducts(products, orderBy);
-    }
-
-    const fuse = new Fuse(products, {
-      keys: ['name', 'description'],
-      threshold: 0.3,
-    });
-
-    const fuseResults = fuse.search(prefix);
-    const filteredProducts = fuseResults.map(result => result.item);
-
-    return this.sortProducts(filteredProducts, orderBy);
+  if (categoryName) {
+    filters.category = {
+      name: categoryName,
+    };
   }
+
+  const products = await this.prisma.product.findMany({
+    where: filters,
+  });
+
+  // If there's no prefix, return sorted products directly
+  if (!prefix) {
+    return this.sortProducts(products, orderBy);
+  }
+
+  // Use Fuse.js for fuzzy search
+  const fuse = new Fuse(products, {
+    keys: ['name', 'description'],
+    threshold: 0.3,
+  });
+
+  const fuseResults = fuse.search(prefix);
+  const filteredProducts = fuseResults.map(result => result.item);
+
+  return this.sortProducts(filteredProducts, orderBy);
+}
+
 
   private sortProducts(products: any[], orderBy?: string) {
     switch (orderBy) {
@@ -106,4 +119,5 @@ async createProduct(dto: CreateProductDto) {
     });
     return result._max.price ?? 0;
   }
+
 }

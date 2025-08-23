@@ -3,8 +3,9 @@ import { ProductModule } from './produit/product.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { CategoryModule } from './category/category.module';
+import { CartModule } from './Cart/cart.module';
 @Module({
-  imports: [ProductModule,
+  imports: [ProductModule,CartModule,
      
      ConfigModule.forRoot({
       isGlobal: true, 

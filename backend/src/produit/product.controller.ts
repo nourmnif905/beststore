@@ -23,7 +23,7 @@ export class ProductController {
 
   // ✅ Correction ici : GET + @Query()
   @Get('search-filter')
-  async searchProductsWithFilter(@Query() dto: SearchByNameDto) {
+  async searchProductsWithFilter(@Body() dto: SearchByNameDto) {
     return this.productService.getProductsByFilters(dto);
   }
 

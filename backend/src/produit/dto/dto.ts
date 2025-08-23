@@ -53,4 +53,8 @@ export class SearchByNameDto {
   @IsString()
   @IsIn(['name_asc', 'name_desc', 'price_asc', 'price_desc', 'in_stock'])
   orderBy?: 'name_asc' | 'name_desc' | 'price_asc' | 'price_desc' | 'in_stock';
+
+  @IsOptional()
+  @IsString()
+  categoryName?: string;
 }
