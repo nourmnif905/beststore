@@ -1,6 +1,7 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Param, Delete } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto, SearchByNameDto } from './dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductController {
@@ -33,4 +34,13 @@ export class ProductController {
     const max = await this.productService.getMaxPrice();
     return { max };
   }
+  @Post('update/:id')
+updateProduct(@Param('id') id: string, @Body() dto: UpdateProductDto) {
+  return this.productService.updateProduct(id, dto);
+}
+
+@Delete('delete/:id')
+deleteProduct(@Param('id') id: string) {
+  return this.productService.deleteProduct(id);
+}
 }

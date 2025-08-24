@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto, SearchByNameDto } from './dto';
 import { ProductStatus } from '@prisma/client';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 // ✅ Import Fuse.js using require (for CommonJS compatibility)
 const Fuse = require('fuse.js');
@@ -119,5 +120,21 @@ async getProductsByFilters(dto: SearchByNameDto) {
     });
     return result._max.price ?? 0;
   }
+  async updateProduct(productId: string, dto: UpdateProductDto) {
+  return this.prisma.product.update({
+    where: { id: productId },
+    data: {
+      ...dto,
+      status: dto.status?.toUpperCase() as ProductStatus, // normalize status if provided
+    },
+  });
+}
+
+async deleteProduct(productId: string) {
+  return this.prisma.product.delete({
+    where: { id: productId },
+  });
+}
+
 
 }
