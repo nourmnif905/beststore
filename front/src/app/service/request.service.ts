@@ -6,7 +6,7 @@ import { HttpParams } from '@angular/common/http';
   providedIn: 'root',
 })
 export class RequestService {
-  private baseUrl = 'http://localhost:3000'; // adapte si ton backend change
+  private baseUrl = 'http://localhost:3000'; 
 
   constructor(private http: HttpClient) {}
 
@@ -32,7 +32,8 @@ export class RequestService {
     return this.http.put(`${this.baseUrl}/${endpoint}`, data);
   }
 
-  delete(endpoint: string) {
-    return this.http.delete(`${this.baseUrl}/${endpoint}`);
-  }
+  delete(endpoint: string, body?: any) {
+  return this.http.request('delete', `${this.baseUrl}/${endpoint}`, { body });
+}
+
 }

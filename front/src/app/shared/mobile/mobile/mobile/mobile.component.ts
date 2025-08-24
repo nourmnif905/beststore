@@ -48,22 +48,31 @@ export class MobileComponent implements OnInit {
     });
   }
 
-  loadProducts(): void {
-    const filters = this.filterForm.value;
+loadProducts(): void {
+  this.requestService.get('products/get_all').subscribe({
+    next: (res: any[]) => {
+      // filtrage côté front
+      const { prefix, minPrice, maxPrice, orderBy } = this.filterForm.value;
 
-    const queryParams = {
-  prefix: filters.prefix,
-  minPrice: filters.minPrice,
-  maxPrice: filters.maxPrice,
-  orderBy: filters.orderBy,
-};
+      let filtered = res;
 
-    console.log('Param filtres API :', queryParams);
-    this.requestService.get('products/search-filter', queryParams).subscribe({
-      next: (res: any) => (this.products = res),
-      error: (err) => console.error('Erreur lors du fetch produits', err),
-    });
-  }
+      if (prefix) {
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(prefix.toLowerCase())
+        );
+      }
+
+      filtered = filtered.filter(p => p.price >= minPrice && p.price <= maxPrice);
+
+      if (orderBy === 'price_asc') filtered.sort((a, b) => a.price - b.price);
+      if (orderBy === 'price_desc') filtered.sort((a, b) => b.price - a.price);
+
+      this.products = filtered;
+    },
+    error: (err) => console.error('Erreur fetch produits', err),
+  });
+}
+
 
   // 🔵 Slider gauche
   onMinPriceChange(event: any): void {

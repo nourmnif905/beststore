@@ -2,12 +2,12 @@
   <div class="position-relative">
     <span class="badge bg-danger badge-custom">New Arrival</span>
     <div class="overflow-hidden">
-      <img [src]="product.photo" class="card-img-top product-image" alt="Product Image">
+      <img [src]="product.image" class="card-img-top product-image" alt="Product Image">
     </div>
   </div>
 
   <div class="card-body p-4 d-flex flex-column">
-    <h5 class="card-title mb-2 fw-bold">{{ product.title }}</h5>
+    <h5 class="card-title mb-2 fw-bold">{{ product.name }}</h5>
 
     <!-- Description tronquée + lien -->
     <p class="card-text text-muted mb-3 flex-grow-1">
@@ -29,7 +29,7 @@
 <div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()"></div>
 <div class="custom-modal" *ngIf="showModal">
   <div class="modal-content">
-    <h5 class="mb-3">{{ product.title }}</h5>
+    <h5 class="mb-3">{{ product.name }}</h5>
     <p>{{ product.description }}</p>
     <div class="text-end">
       <button class="btn btn-primary mt-3" (click)="closeModal()">Fermer</button>

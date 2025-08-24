@@ -16,7 +16,7 @@ export class CartService {
   async initCart(): Promise<void> {
     if (!this.cartId) {
       const res = await firstValueFrom(
-        this.requestService.post('cart/create', {})
+        this.requestService.post('cart', {})
       ) as { id: string };
       this.cartId = res.id;
     }
@@ -24,7 +24,7 @@ export class CartService {
 
   async addToCart(productId: string, quantity: number = 1): Promise<void> {
     await this.initCart();
-    await firstValueFrom(this.requestService.post(`cart/add/${this.cartId}`, {
+    await firstValueFrom(this.requestService.post(`cart/${this.cartId}/items`, {
       productId,
       quantity,
     }));
@@ -33,18 +33,26 @@ export class CartService {
 
   async refreshCartItems(): Promise<void> {
     if (!this.cartId) return;
-    const cart = await firstValueFrom(this.requestService.get(`cart/get_items/${this.cartId}`));
+    const cart = await firstValueFrom(this.requestService.get(`cart/${this.cartId}/items`));
     this.itemsSubject.next(cart.items);
   }
 
   async removeItem(itemId: string): Promise<void> {
-    await firstValueFrom(this.requestService.delete(`cart/delete_carditem/${itemId}`));
-    await this.refreshCartItems();  // <-- await ici aussi
-  }
+  if (!this.cartId) return;
+
+  await firstValueFrom(
+    this.requestService.delete('cart/items', {
+      cartId: this.cartId,
+      productId: itemId
+    })
+  );
+
+  await this.refreshCartItems();
+}
 
   async clearCart(): Promise<void> {
     if (!this.cartId) return;
-    await firstValueFrom(this.requestService.delete(`cart/delete_card/${this.cartId}`));
+    await firstValueFrom(this.requestService.delete(`cart/${this.cartId}/items`));
     this.itemsSubject.next([]);
     this.cartId = null;
   }

@@ -1,0 +1,9 @@
+.layout {
+  display: flex;        /* ⚡ sidebar et contenu côte à côte */
+  height: 100%;
+}
+
+.main-content {
+  flex: 1;              /* prend tout l’espace restant */
+  overflow-y: auto;
+}

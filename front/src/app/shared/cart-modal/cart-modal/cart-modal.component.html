@@ -12,9 +12,9 @@
     <!-- Liste des produits -->
     <div class="cart-items" *ngIf="cartItems.length > 0; else emptyCart">
       <div class="cart-item" *ngFor="let item of cartItems">
-        <img [src]="item.product?.photo" alt="Produit" width="60" height="60" />
+        <img [src]="item.product?.image" alt="Produit" width="60" height="60" />
         <div class="cart-item-info">
-          <h5 class="cart-item-title">{{ item.product?.title }}</h5>
+          <h5 class="cart-item-title">{{ item.product?.name }}</h5>
           <p class="cart-item-price">{{ item.product?.price }} TND x {{ item.quantity }}</p>
         </div>
         <button class="remove-item-btn" (click)="removeFromCart(item.id)">🗑</button>
