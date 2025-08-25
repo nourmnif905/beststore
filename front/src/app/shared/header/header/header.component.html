@@ -43,17 +43,14 @@
 
 <!-- Navigation -->
 <nav class="nav-bar">
-  <a href="#">Ordinateurs</a>
-    <a 
-  routerLink="/mobile" 
-  routerLinkActive="active-link" 
-  [routerLinkActiveOptions]="{ exact: true }"
->
-  Smartphones
-</a>
-  <a href="#">Tablettes</a>
-  <a href="#">Gaming</a>
-  <a href="#">Audio</a>
-  <a href="#">Photo & Vidéo</a>
-  <a href="#">Composants PC</a>
+  <a 
+    *ngFor="let cat of categories" 
+    [routerLink]="['/category', cat.slug || cat.name]" 
+    routerLinkActive="active-link" 
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    {{ cat.name }}
+  </a>
 </nav>
+
+

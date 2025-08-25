@@ -1,40 +1,37 @@
-import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { RequestService } from 'src/app/service/request.service';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ProductCardComponent } from 'src/app/shared/product/product-card/product-card/product-card.component';
-
 
 @Component({
   selector: 'app-mobile-products',
   templateUrl: './mobile.component.html',
   styleUrls: ['./mobile.component.scss'],
-  imports: [ReactiveFormsModule, CommonModule , ProductCardComponent]
+  imports: [ReactiveFormsModule, CommonModule, ProductCardComponent],
+  standalone: true,
 })
-
 export class MobileComponent implements OnInit {
   products: any[] = [];
   filterForm!: FormGroup;
   maxLimit: number = 10000;
-
-  constructor(private fb: FormBuilder, private requestService: RequestService) {}
 
   ngOnInit(): void {
     this.initForm();
     this.loadMaxPrice();
     this.loadProducts();
 
-    // ⏱ Écouter chaque changement pour auto-rechercher
     this.filterForm.valueChanges.subscribe(() => this.loadProducts());
   }
 
+  constructor(private requestService: RequestService) {}
+
   initForm(): void {
-    this.filterForm = this.fb.group({
-      prefix: [''],
-      minPrice: [0],
-      maxPrice: [this.maxLimit],
-      orderBy: ['price_asc'],
+    this.filterForm = new FormGroup({
+      prefix: new FormControl(''),
+      minPrice: new FormControl(0),
+      maxPrice: new FormControl(this.maxLimit),
+      orderBy: new FormControl('price_asc'),
     });
   }
 
@@ -42,63 +39,48 @@ export class MobileComponent implements OnInit {
     this.requestService.get('products/max-price').subscribe({
       next: (res: any) => {
         this.maxLimit = res.max || 10000;
-        this.filterForm.patchValue({ maxPrice: this.maxLimit });
+        this.filterForm.get('maxPrice')?.setValue(this.maxLimit);
       },
       error: (err) => console.error('Erreur max-price', err),
     });
   }
 
-loadProducts(): void {
-  this.requestService.get('products/get_all').subscribe({
-    next: (res: any[]) => {
-      // filtrage côté front
-      const { prefix, minPrice, maxPrice, orderBy } = this.filterForm.value;
+  loadProducts(): void {
+    const filters = {
+      prefix: this.filterForm.value.prefix,
+      minPrice: this.filterForm.value.minPrice,
+      maxPrice: this.filterForm.value.maxPrice,
+      orderBy: this.filterForm.value.orderBy as
+        'name_asc' | 'name_desc' | 'price_asc' | 'price_desc' | 'in_stock',
+    };
 
-      let filtered = res;
+    console.log('Param filtres API :', filters);
+    this.requestService.get('products/search-filter', filters).subscribe({
+      next: (res: any) => (this.products = res),
+      error: (err) => console.error('Erreur lors du fetch produits', err),
+    });
+  }
 
-      if (prefix) {
-        filtered = filtered.filter(p =>
-          p.name.toLowerCase().includes(prefix.toLowerCase())
-        );
-      }
-
-      filtered = filtered.filter(p => p.price >= minPrice && p.price <= maxPrice);
-
-      if (orderBy === 'price_asc') filtered.sort((a, b) => a.price - b.price);
-      if (orderBy === 'price_desc') filtered.sort((a, b) => b.price - a.price);
-
-      this.products = filtered;
-    },
-    error: (err) => console.error('Erreur fetch produits', err),
-  });
-}
-
-
-  // 🔵 Slider gauche
   onMinPriceChange(event: any): void {
     const value = +event.target.value;
-    this.filterForm.patchValue({ minPrice: value });
+    this.filterForm.get('minPrice')?.setValue(value);
   }
 
-  // 🔵 Slider droit
   onMaxPriceChange(event: any): void {
     const value = +event.target.value;
-    this.filterForm.patchValue({ maxPrice: value });
+    this.filterForm.get('maxPrice')?.setValue(value);
   }
 
-  // 🎯 Calcul position de la bulle gauche
   getMinBubblePosition(): string {
     const min = this.filterForm.value.minPrice;
     return `${(min / this.maxLimit) * 100}%`;
   }
 
-  // 🎯 Calcul position de la bulle droite
   getMaxBubblePosition(): string {
     const max = this.filterForm.value.maxPrice;
     return `${(max / this.maxLimit) * 100}%`;
   }
 
-  // 🟦 Style de la zone bleue entre les 2 sliders
   getSliderRangeStyle(): any {
     const min = this.filterForm.value.minPrice;
     const max = this.filterForm.value.maxPrice;

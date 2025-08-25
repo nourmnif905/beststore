@@ -1,32 +1,34 @@
 <div class="products-page">
-    <!-- Header Produits -->
-    <header class="products-header">
-      <h2>📦 Gestion des Produits</h2>
-      <button class="btn-add" (click)="ouvrirModal()">+ Ajouter un produit</button>
-    </header>
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-  <mat-tab label="telephone">
-    
-  </mat-tab>
-  <mat-tab label="Ordinateurs">
-    
-  </mat-tab>
-  <mat-tab label="games">
-    Content 3
-  </mat-tab>
-  <mat-tab label="aaa">
-    Content 3
-  </mat-tab>
-  <mat-tab label="bbb">
-    
+  <header class="products-header">
+    <h2>📦 Gestion des Produits</h2>
+    <button class="btn-add" (click)="toggleModal()">+ Ajouter un produit</button>
+  </header>
 
+  <!-- Onglets catégories -->
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+    <mat-tab *ngFor="let cat of categories" [label]="cat.name">
+      <div class="products-grid">
+        <!-- Utilisation du ProductCardComponent -->
+        <app-product-card
+          *ngFor="let prod of productsByCategory[cat.name]"
+          [product]="prod"
+          [adminMode]="true"  
+          (edit)="modifierProduit($event)"   
+          (delete)="supprimerProduit($event)"  
+        ></app-product-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 
-  </mat-tab>
-</mat-tab-group>
-   <!-- Modal affiché dynamiquement -->
-    <app-addprod *ngIf="modalOuvert"
-      (produitAjoute)="ajouterProduit($event)"
-              (close)="toggleModal()">
-    </app-addprod>
-    
-  </div>
+  <!-- Modal ajout produit -->
+  <app-addprod *ngIf="modalOuvert"
+    (produitAjoute)="ajouterProduit($event)"
+    (close)="toggleModal()">
+  </app-addprod>
+  <!-- Modal édition produit -->
+<app-editprod *ngIf="modalEditOuvert"
+  [produit]="produitSelectionne"
+  (produitModifie)="onProduitModifie($event)"
+  (close)="fermerModalEdit()">
+</app-editprod>
+</div>

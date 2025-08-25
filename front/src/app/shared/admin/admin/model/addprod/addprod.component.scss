@@ -131,3 +131,19 @@ textarea {
 .file-upload span {
   pointer-events: none; /* Permet de cliquer sur le label pour ouvrir le file picker */
 }
+/* addprod.component.scss */
+
+.error {
+  color: rgb(185, 30, 30);          /* texte rouge */
+  font-size: 0.8rem;   /* un peu plus petit que le texte normal */
+  margin-top: 4px;     /* espace au-dessus du message */
+  font-weight: 500;    /* légèrement gras pour visibilité */
+  display: block;      /* s'assure que chaque message commence sur une nouvelle ligne */
+}
+.btn-add:disabled {
+  background-color:  #516da0ef;      /* gris clair */
+  color: #222222;                 /* texte plus pâle */
+  cursor: not-allowed;         /* curseur interdit */
+  opacity: 0.6;                /* un peu transparent */
+  pointer-events: none;        /* empêche tout clic */
+}

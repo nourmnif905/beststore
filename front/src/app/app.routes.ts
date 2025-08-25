@@ -12,10 +12,6 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'mobile',
-    loadComponent: () => import('./mobile/mobile/mobile.page').then( m => m.MobilePage)
-  },
-  {
     path: 'admin',
     loadComponent: () => import('./admin/admin.page').then( m => m.AdminPage)
   },
@@ -23,6 +19,11 @@ export const routes: Routes = [
     path: 'produits',
     loadComponent: () => import('./admin/produits/produits.page').then( m => m.ProduitsPage)
   },
+  {
+    path: 'category/:categorySlug',
+    loadComponent: () => import('./category/category.page').then( m => m.CategoryPage)
+  },
+
 
 
 ];

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RequestService } from 'src/app/service/request.service';
 import { ProductCardComponent } from '../../product-card/product-card/product-card.component';
@@ -17,11 +17,12 @@ export class ProductPageComponent  implements OnInit {
 
     products: any;
 
-  filterForm = new FormGroup({
+    filterForm = new FormGroup({
     prefix: new FormControl(''),
     minPrice: new FormControl(0),
     maxPrice: new FormControl(15000),
     orderBy: new FormControl('price_asc'),
+    category: new FormControl(''),
   });
 
   get filters() {
@@ -29,26 +30,26 @@ export class ProductPageComponent  implements OnInit {
   }
 
   constructor(private requestService: RequestService) {}
-
+  @Input() category: string | null = null;
   ngOnInit(): void {
+    if (this.category) {
+    this.filterForm.patchValue({ category: this.category });
+  }
+
+  this.getProducts();
+
+  this.filterForm.valueChanges.subscribe(() => {
     this.getProducts();
-
-    this.filterForm.valueChanges.subscribe(() => {
-      this.getProducts();
-    });
+  });
   }
 
-  getProducts() {
-    this.requestService.get('products/get_all', this.filters).subscribe({
-      next: (res) => {
-        console.log(res);
+getProducts() {
+  this.requestService.get('products/get_all', this.filterForm.value).subscribe({
+    next: (res) => this.products = res,
+    error: (err) => console.error(err),
+  });
+}
 
-        this.products = res
-      },
-
-      error: (err) => console.error('Erreur API :', err),
-    });
-  }
  minLimit = 0;
 maxLimit = 15000;
 

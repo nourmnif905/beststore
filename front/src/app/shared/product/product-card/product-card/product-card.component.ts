@@ -1,27 +1,42 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Product } from 'src/app/shared/models/product';
 import { CommonModule } from '@angular/common';
 import { CartService } from 'src/app/service/services/cart.service';
+
 @Component({
   selector: 'app-product-card',
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.scss'],
-  imports:[CommonModule]
+  imports: [CommonModule]
 })
 export class ProductCardComponent {
+  @Input() product!: Product;
+  @Input() adminMode: boolean = false; // true si c'est dans l'admin
+  @Output() edit = new EventEmitter<Product>();
+  @Output() delete = new EventEmitter<Product>();
+
+  showModal = false;
+
   constructor(private cartService: CartService) {}
-   @Input() product!: Product;
-     showModal = false;
 
   openModal(event: MouseEvent) {
-    event.preventDefault(); // pour éviter le scroll en haut
+    event.preventDefault(); // empêche le scroll en haut
     this.showModal = true;
   }
 
   closeModal() {
     this.showModal = false;
   }
-   addToCart(productId: string) {
+
+  addToCart(productId: string) {
     this.cartService.addToCart(productId);
+  }
+
+  onEdit() {
+    this.edit.emit(this.product);
+  }
+
+  onDelete() {
+    this.delete.emit(this.product);
   }
 }

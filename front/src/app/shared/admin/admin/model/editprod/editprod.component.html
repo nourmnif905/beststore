@@ -1,0 +1,24 @@
+<div class="modal-overlay" (click)="fermer()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Modifier Produit</h2>
+
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <label>Nom</label>
+      <input type="text" formControlName="name" />
+
+      <label>Description</label>
+      <textarea formControlName="description"></textarea>
+
+      <label>Prix</label>
+      <input type="number" formControlName="price" />
+
+      <label>Image URL</label>
+      <input type="text" formControlName="image" />
+
+      <div class="actions">
+        <button type="submit" [disabled]="editForm.invalid">✅ Sauvegarder</button>
+        <button type="button" (click)="fermer()">❌ Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,38 +1,43 @@
+import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup, FormControl, Validators,ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { RequestService } from 'src/app/service/request.service';
+
 @Component({
   selector: 'app-addprod',
   templateUrl: './addprod.component.html',
   styleUrls: ['./addprod.component.scss'],
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
 })
-export class AddprodComponent   {
-title = new FormControl('', Validators.required);
-  description = new FormControl('');
-  price = new FormControl(0, [Validators.required, Validators.min(0)]);
-  category = new FormControl('', Validators.required);
-  imageUrl = new FormControl('');
-
-  categories: any[] = [];
-  
-  imagePreview: string | null = null;
-
+export class AddprodComponent implements OnInit {
+  @Input() existingTitles: string[] = [];
   @Output() close = new EventEmitter<void>();
   @Output() produitAjoute = new EventEmitter<any>();
-  constructor(private requestService: RequestService) {}
+
+  categories: any[] = [];
+  imagePreview: string | null = null;
+
+  // 🔹 FormGroup avec validations
+  form: FormGroup = new FormGroup({
+    title: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    price: new FormControl(null, [Validators.required, Validators.min(0)]),
+    category: new FormControl('', Validators.required),
+    imageUrl: new FormControl('', Validators.required),
+  });
+
+  constructor(private requestService: RequestService, private toastr: ToastrService) {}
 
   ngOnInit() {
     this.requestService.get('category/get_all').subscribe({
-      next: (res) => {
-        this.categories = res; // si ton API renvoie { data: [...] } adapte -> res.data
-      },
-      error: (err) => console.error('Erreur récupération catégories:', err)
+      next: (res) => (this.categories = res),
+      error: (err) => console.error(err),
     });
   }
-  previewImage(event: any) {
-    this.imagePreview = this.imageUrl.value;
+
+  previewImage() {
+    this.imagePreview = this.form.get('imageUrl')?.value || null;
   }
 
   uploadImage(event: any) {
@@ -41,30 +46,38 @@ title = new FormControl('', Validators.required);
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result as string;
-        this.imageUrl.setValue(this.imagePreview);
+        this.form.get('imageUrl')?.setValue(this.imagePreview);
       };
       reader.readAsDataURL(file);
     }
   }
 
   ajouter() {
-    if (this.title.valid && this.price.valid && this.category.valid) {
-      const produit = {
-        title: this.title.value,
-        description: this.description.value,
-        price: this.price.value,
-        category: this.category.value,
-        image: this.imageUrl.value
-      };
-      this.produitAjoute.emit(produit);
-      this.fermer();
-    } else {
-      alert('Veuillez remplir tous les champs obligatoires.');
+    if (this.form.invalid) {
+      this.form.markAllAsTouched(); // ⚡ marque tous les champs pour afficher les erreurs
+      return;
     }
+
+    const produit = {
+      name: this.form.get('title')?.value,
+      description: this.form.get('description')?.value,
+      price: this.form.get('price')?.value,
+      categoryName: this.categories.find(c => c.id === this.form.get('category')?.value)?.name,
+      image: this.form.get('imageUrl')?.value,
+    };
+
+    this.requestService.post('products/create', produit).subscribe({
+      next: (res) => {
+        this.produitAjoute.emit(res);
+        this.fermer();
+        this.form.reset({ title: '', description: '', price: 0, category: '', imageUrl: '' });
+        this.imagePreview = null;
+      },
+      error: () => this.toastr.error('Erreur lors de l’ajout du produit.'),
+    });
   }
 
   fermer() {
     this.close.emit();
   }
-
 }

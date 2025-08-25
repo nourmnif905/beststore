@@ -1,45 +1,69 @@
 <div class="modal-container">
-      <div class="modal-card">
-        <h2>📦 Ajouter un produit</h2>
-        <form (submit)="ajouter(); $event.preventDefault()">
-          
-          <div class="form-group">
-            <label>Titre:</label>
-            <input type="text" [formControl]="title" placeholder="Titre du produit" />
-          </div>
-          <!-- Champ image -->
-          <div class="form-group">
-            <label>Image (URL ou téléverser)</label>
-            <input type="text" [formControl]="imageUrl" placeholder="URL de l'image" (input)="previewImage($event)" />
-             <label class="file-upload">
-    <input type="file" (change)="uploadImage($event)" hidden />
-    <span>📤 Choisir un fichier</span>
-  </label>
-            <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview" />
-          </div>
-          <div class="form-group">
-            <label>Description:</label>
-            <textarea [formControl]="description" placeholder="Description"></textarea>
-          </div>
+  <div class="modal-card">
+    <h2>📦 Ajouter un produit</h2>
+    <form [formGroup]="form" (ngSubmit)="ajouter()">
 
-          <div class="form-group">
-            <label>Prix (€):</label>
-            <input type="number" [formControl]="price" placeholder="0" />
-          </div>
-
-          <div class="form-group">
-            <label>Catégorie:</label>
-            <select [formControl]="category">
-              <option value="" disabled selected>Choisir une catégorie</option>
-              <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-            </select>
-          </div>
-
-          <div class="buttons">
-            <button type="submit" class="btn-add">Ajouter</button>
-            <button type="button" class="btn-cancel" (click)="fermer()">Annuler</button>
-          </div>
-
-        </form>
+      <!-- Titre -->
+      <div class="form-group">
+        <label>Titre:</label>
+        <input type="text" formControlName="title" placeholder="Titre du produit" />
+        <div class="error" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
+          Le titre est requis.
+        </div>
       </div>
-    </div>
+
+      <!-- Image -->
+      <div class="form-group">
+        <label>Image (URL ou téléverser)</label>
+        <input type="text" formControlName="imageUrl" placeholder="URL de l'image" (input)="previewImage()" />
+        <label class="file-upload">
+          <input type="file" (change)="uploadImage($event)" hidden />
+          <span>📤 Choisir un fichier</span>
+        </label>
+        <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview" />
+        <div class="error" *ngIf="form.get('imageUrl')?.touched && form.get('imageUrl')?.invalid">
+          L'image est requise.
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label>Description:</label>
+        <textarea formControlName="description" placeholder="Description"></textarea>
+        <div class="error" *ngIf="form.get('description')?.touched && form.get('description')?.invalid">
+          La description est requise.
+        </div>
+      </div>
+
+      <!-- Prix -->
+      <div class="form-group">
+        <label>Prix (€):</label>
+        <input type="number" formControlName="price" placeholder="0" />
+        <div class="error" *ngIf="form.get('price')?.touched && form.get('price')?.invalid">
+          Le prix est requis et doit être ≥ 0.
+        </div>
+      </div>
+
+      <!-- Catégorie -->
+      <div class="form-group">
+        <label>Catégorie:</label>
+        <select formControlName="category">
+          <option value="" disabled>Choisir une catégorie</option>
+          <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+        </select>
+        <div class="error" *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
+          La catégorie est requise.
+        </div>
+      </div>
+
+      <!-- Boutons -->
+      <div class="buttons">
+        <button type="submit" class="btn-add" [disabled]="form.invalid">
+          Ajouter
+        </button>
+        <button type="button" class="btn-cancel" (click)="fermer()">Annuler</button>
+      </div>
+
+    </form>
+  </div>
+</div>

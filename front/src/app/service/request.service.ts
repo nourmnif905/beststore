@@ -35,5 +35,11 @@ export class RequestService {
   delete(endpoint: string, body?: any) {
   return this.http.request('delete', `${this.baseUrl}/${endpoint}`, { body });
 }
+request<T>(method: string, url: string, body?: any): Observable<T> {
+  return this.http.request<T>(method, `${this.baseUrl}/${url}`, {
+    body,
+    observe: 'body'
+  });
+}
 
 }

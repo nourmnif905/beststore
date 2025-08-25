@@ -37,18 +37,18 @@ export class CartService {
     this.itemsSubject.next(cart.items);
   }
 
-  async removeItem(itemId: string): Promise<void> {
+async removeItem(itemId: string): Promise<void> {
   if (!this.cartId) return;
 
   await firstValueFrom(
-    this.requestService.delete('cart/items', {
-      cartId: this.cartId,
-      productId: itemId
+    this.requestService.request('DELETE', 'cart/items', {
+      body: { cartId: this.cartId, productId: itemId }
     })
   );
 
   await this.refreshCartItems();
 }
+
 
   async clearCart(): Promise<void> {
     if (!this.cartId) return;
@@ -70,5 +70,29 @@ export class CartService {
     map(items => items.reduce((acc, item) => acc + item.quantity, 0))
   );
 }
+increaseQuantity(itemId: string) {
+  const items = this.itemsSubject.value.map(item => {
+    if (item.id === itemId) {
+      return { ...item, quantity: item.quantity + 1 };
+    }
+    return item;
+  });
+  this.itemsSubject.next(items);
+}
+
+decreaseQuantity(itemId: string) {
+  let items = this.itemsSubject.value.map(item => {
+    if (item.id === itemId && item.quantity > 1) {
+      return { ...item, quantity: item.quantity - 1 };
+    }
+    return item;
+  });
+
+  // supprime l'article si quantité = 0
+  items = items.filter(item => item.quantity > 0);
+
+  this.itemsSubject.next(items);
+}
+
 }
 

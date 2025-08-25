@@ -186,3 +186,45 @@
   font-size: 12px;
   margin-bottom: 8px;
 }
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: #f1f1f1;
+  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+/* Style bouton + */
+.qty-btn.plus:hover {
+  background: #28a745; /* vert */
+  color: white;
+}
+
+/* Style bouton − */
+.qty-btn.minus:hover {
+  background: #dc3545; /* rouge */
+  color: white;
+}
+
+.qty-value {
+  min-width: 20px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+}

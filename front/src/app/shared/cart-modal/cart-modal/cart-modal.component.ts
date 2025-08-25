@@ -38,6 +38,14 @@ export class CartModalComponent implements OnInit {
   get phoneControl(): FormControl {
     return this.orderForm.get('phone') as FormControl;
   }
+  increaseQuantity(item: any) {
+  this.cartService.increaseQuantity(item.id);
+}
+
+decreaseQuantity(item: any) {
+  this.cartService.decreaseQuantity(item.id);
+}
+
  
 
   onCloseClick() {
