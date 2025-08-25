@@ -1,4 +1,13 @@
 
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1000; /* juste en dessous du modal */
+}
 .custom-modal {
   position: fixed;
   top: 50%;
@@ -36,4 +45,15 @@
   font-weight: bold;
   color: #474747;
 }
+
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;               /* un peu plus d’espace entre les cartes */
+  justify-content: center;
+  padding: 0px;
+}
+
+
+
 
