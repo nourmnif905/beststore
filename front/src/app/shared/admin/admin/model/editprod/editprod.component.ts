@@ -1,5 +1,16 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RequestService } from 'src/app/service/request.service';
 
@@ -23,30 +34,43 @@ export class EditProdComponent implements OnInit {
     this.editForm = new FormGroup({
       name: new FormControl(this.produit?.name, Validators.required),
       description: new FormControl(this.produit?.description),
-      price: new FormControl(this.produit?.price, [Validators.required, Validators.min(1)]),
-      stock: new FormControl(this.produit?.stock, [Validators.required, Validators.min(1)]),
+      price: new FormControl(this.produit?.price, [
+        Validators.required,
+        Validators.min(1)
+      ]),
+      stock: new FormControl(this.produit?.stock, [
+        Validators.required,
+        Validators.min(0)
+      ]),
       image: new FormControl(this.produit?.image, Validators.required)
     });
   }
 
-onSubmit() {
-  if (this.editForm.invalid) return;
+  onSubmit() {
+    if (this.editForm.invalid) return;
 
-  const updated = {
-    ...this.produit,
-    ...this.editForm.value
-  };
+    const formValues = this.editForm.value;
 
-  this.requestService.post(`products/update/${this.produit.id}`, updated)
-    .subscribe({
-      next: (res: any) => {
-        this.produitModifie.emit(res);
-        this.fermer();
-      },
-      error: (err) => console.error(err)
-    });
-}
+    const updated = {
+      ...this.produit,
+      ...formValues,
+      price: parseFloat(formValues.price),
+      stock: parseInt(formValues.stock, 10)
+    };
 
+    console.log('🔄 Updating product with:', updated);
+
+    this.requestService.post(`products/update/${this.produit.id}`, updated)
+      .subscribe({
+        next: (res: any) => {
+          this.produitModifie.emit(res);
+          this.fermer();
+        },
+        error: (err) => {
+          console.error('❌ Error updating product:', err);
+        }
+      });
+  }
 
   fermer() {
     this.close.emit();
