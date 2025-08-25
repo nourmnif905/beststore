@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CreateCategoryAttributeDto } from './dto/create-category-attribute.dto';
 
 @Controller('category')
 export class CategoryController {
@@ -34,4 +35,17 @@ export class CategoryController {
   remove(@Param('name') name: string) {
     return this.categoryService.remove(name);
   }
+    @Get(':categoryName/attributes')
+  async getAttributes(@Param('categoryName') categoryName: string) {
+    return this.categoryService.getAttributes(categoryName);
+  }
+
+  @Post(':categoryName/attributes')
+  async createAttribute(
+    @Param('categoryName') categoryName: string,
+    @Body() dto: CreateCategoryAttributeDto,
+  ) {
+    return this.categoryService.createAttribute(categoryName, dto);
+  }
+
 }

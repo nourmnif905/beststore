@@ -15,22 +15,54 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products  Product[]
+   attributes CategoryAttribute[] 
 }
+
+
 model Product {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
   price       Float
   categoryName String
   image       String?
   index       Int?
-  stock       Int      @default(0)
-  status ProductStatus @default(SUR_COMMANDE)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  category    Category @relation(fields: [categoryName], references: [name])
+  stock       Int                @default(0)
+  status      ProductStatus      @default(SUR_COMMANDE)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  category    Category           @relation(fields: [categoryName], references: [name])
+  specifications ProductSpecification[] // 👈 Stores actual values
   cartItems   CartItem[]
 }
+
+model CategoryAttribute {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   // e.g., RAM, CPU, Storage
+  type        AttributeType // String, Number, etc.
+  categoryId  String   @db.ObjectId
+  category    Category @relation(fields: [categoryId], references: [id])
+  specifications ProductSpecification[] // 👈 Relation inverse
+}
+
+model ProductSpecification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String   @db.ObjectId
+  attributeId String @db.ObjectId
+  value     String // Store as string, parse to number/etc. in code
+
+  product   Product           @relation(fields: [productId], references: [id])
+  attribute CategoryAttribute @relation(fields: [attributeId], references: [id])
+}
+enum AttributeType {
+  STRING
+  NUMBER
+  BOOLEAN
+  ENUM
+}
+
+
+
 enum ProductStatus {
   AVAILABLE
   SUR_COMMANDE
