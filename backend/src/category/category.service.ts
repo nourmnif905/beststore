@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CreateCategoryAttributeDto } from './dto/create-category-attribute.dto';
 const Fuse = require('fuse.js');
 
 @Injectable()
@@ -66,4 +67,35 @@ async remove(name: string) {
   } catch (error) {
     throw error;
   }
-}}
+}
+
+async getAttributes(categoryName: string) {
+    const category = await this.prisma.category.findUnique({
+      where: { name: categoryName },
+      include: { attributes: true },
+    });
+    if (!category) throw new NotFoundException('Category not found');
+    return category.attributes;
+  }
+
+  async createAttribute(
+    categoryName: string,
+    dto: CreateCategoryAttributeDto,
+  ) {
+    const category = await this.prisma.category.findUnique({
+      where: { name: categoryName },
+    });
+    if (!category) throw new NotFoundException('Category not found');
+    return this.prisma.categoryAttribute.create({
+      data: {
+        name: dto.name,
+        type: dto.type,
+        category: { connect: { id: category.id } },
+      },
+    });
+  }
+
+
+
+
+}

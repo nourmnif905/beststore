@@ -28,6 +28,7 @@ async createProduct(dto: CreateProductDto) {
       price: dto.price,
       image: dto.image,
       index: nextIndex,
+      stock: dto.stock,
       status: (dto.status?.toUpperCase() as ProductStatus) || ProductStatus.SUR_COMMANDE,
       categoryName: dto.categoryName,  // <-- pass the foreign key directly
       // NO nested connect here
