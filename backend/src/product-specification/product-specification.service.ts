@@ -53,7 +53,10 @@ export class ProductSpecificationService {
 
     return this.prisma.productSpecification.update({
       where: { id },
-      data: dto,
+      data: {
+        value: dto.value,
+
+      },
     });
   }
 
