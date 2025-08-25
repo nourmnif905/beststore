@@ -17,12 +17,12 @@ export class ProductSpecificationController {
     private readonly productSpecificationService: ProductSpecificationService,
   ) {}
 
-  @Post()
+  @Post('create')
   create(@Body() dto: CreateProductSpecificationDto) {
     return this.productSpecificationService.create(dto);
   }
 
-  @Get()
+  @Get('all_specs')
   findAll() {
     return this.productSpecificationService.findAll();
   }
@@ -44,4 +44,12 @@ export class ProductSpecificationController {
   remove(@Param('id') id: string) {
     return this.productSpecificationService.remove(id);
   }
+  @Get('by-attribute/:attributeId')
+getByAttribute(@Param('attributeId') attributeId: string) {
+  return this.productSpecificationService.findByAttribute(attributeId);
+}
+@Get('by-product/:productId')
+findByProduct(@Param('productId') productId: string) {
+  return this.productSpecificationService.findByProduct(productId);     
+}
 }

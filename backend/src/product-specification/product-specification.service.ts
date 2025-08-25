@@ -67,4 +67,31 @@ export class ProductSpecificationService {
       where: { id },
     });
   }
+  async findByAttribute(attributeId: string) {
+  // Optional: Validate attribute exists
+  const attribute = await this.prisma.categoryAttribute.findUnique({
+    where: { id: attributeId },
+  });
+
+  if (!attribute) throw new NotFoundException('Attribute not found');
+
+  // Return only the specifications related to this attribute
+  return this.prisma.productSpecification.findMany({
+    where: { attributeId },
+    select: {
+      value: true,
+    },
+  });
+}
+  async findByProduct(productId: string) {
+  const product = await this.prisma.product.findUnique({
+    where: { id: productId },
+    include: { specifications: true },
+  });
+
+  if (!product) throw new NotFoundException('Product not found');
+
+  return product.specifications;
+}
+
 }
