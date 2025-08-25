@@ -9,7 +9,6 @@
 
   backdrop-filter: blur(3px); // effet de flou derrière
 }
-
 .modal-content {
   background: #fff;
   padding: 30px;
@@ -47,6 +46,8 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       font-size: 0.95rem;
+      color: #000;            // texte noir pour que ce soit visible
+      background-color: #fff; 
       transition: border 0.2s, box-shadow 0.2s;
 
       &:focus {
