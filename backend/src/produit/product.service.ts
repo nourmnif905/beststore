@@ -125,7 +125,12 @@ async getProductsByFilters(dto: SearchByNameDto) {
   return this.prisma.product.update({
     where: { id: productId },
     data: {
-      ...dto,
+      name: dto.name,
+      description: dto.description,
+      price: dto.price,
+      image: dto.image,
+      stock: dto.stock,
+      categoryName: dto.categoryName,  // <-- pass the foreign key directly
       status: dto.status?.toUpperCase() as ProductStatus, // normalize status if provided
     },
   });
