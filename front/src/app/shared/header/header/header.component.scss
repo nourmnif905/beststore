@@ -113,9 +113,6 @@ body {
 
 
 /* --- NAVIGATION PRINCIPALE --- */
-/* Top Bar déjà sticky en haut si besoin */
-/* On va fixer la nav-bar juste en dessous du header */
-
 .nav-bar {
   display: flex;
   justify-content: center;
@@ -127,14 +124,8 @@ body {
   border-bottom: 1px solid #e5e7eb;
   width: 100%;
   box-sizing: border-box;
-  
-  position: sticky;  /* reste visible en scroll */
-  top: 72px;         /* distance du top = hauteur du header + top-bar */
-  z-index: 1000;
+  margin: 0;
 }
-
-/* Ajuste si ton header/top-bar ont des hauteurs différentes */
-
 
 .nav-bar a {
   text-decoration: none;

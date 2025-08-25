@@ -55,5 +55,39 @@
 }
 
 
+/* Badge status */
+.product-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Badge position */
+.product-status {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+/* Couleurs badges */
+.in-stock {
+  background-color: #28a745; /* Vert */
+}
+
+.low-stock {
+  background-color: #ff9800; /* Orange */
+}
+
+.precommande {
+  background-color: #dc3545; /* Rouge */
+}
+
 
 

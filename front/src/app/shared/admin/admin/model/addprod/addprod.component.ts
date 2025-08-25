@@ -25,6 +25,7 @@ export class AddprodComponent implements OnInit {
     price: new FormControl(null, [Validators.required, Validators.min(0)]),
     category: new FormControl('', Validators.required),
     imageUrl: new FormControl('', Validators.required),
+    stock: new FormControl('', [Validators.required, Validators.min(0)])
   });
 
   constructor(private requestService: RequestService, private toastr: ToastrService) {}
@@ -64,10 +65,12 @@ export class AddprodComponent implements OnInit {
       price: this.form.get('price')?.value,
       categoryName: this.categories.find(c => c.id === this.form.get('category')?.value)?.name,
       image: this.form.get('imageUrl')?.value,
+      stock: this.form.get('stock')?.value,
     };
 
     this.requestService.post('products/create', produit).subscribe({
       next: (res) => {
+        console.log(res)
         this.produitAjoute.emit(res);
         this.fermer();
         this.form.reset({ title: '', description: '', price: 0, category: '', imageUrl: '' });

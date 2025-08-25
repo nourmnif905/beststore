@@ -9,12 +9,14 @@ import { CartService } from 'src/app/service/services/cart.service';
   styleUrls: ['./product-card.component.scss'],
   imports: [CommonModule]
 })
+
 export class ProductCardComponent {
+  
   @Input() product!: Product;
   @Input() adminMode: boolean = false; // true si c'est dans l'admin
   @Output() edit = new EventEmitter<Product>();
   @Output() delete = new EventEmitter<Product>();
-
+  ProductStatus = status; 
   showModal = false;
 
   constructor(private cartService: CartService) {}

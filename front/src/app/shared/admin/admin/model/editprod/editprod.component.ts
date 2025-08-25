@@ -24,6 +24,7 @@ export class EditProdComponent implements OnInit {
       name: new FormControl(this.produit?.name, Validators.required),
       description: new FormControl(this.produit?.description),
       price: new FormControl(this.produit?.price, [Validators.required, Validators.min(1)]),
+      stock: new FormControl(this.produit?.stock, [Validators.required, Validators.min(1)]),
       image: new FormControl(this.produit?.image, Validators.required)
     });
   }

@@ -40,9 +40,14 @@
         <label>Prix (€):</label>
         <input type="number" formControlName="price" placeholder="0" />
         <div class="error" *ngIf="form.get('price')?.touched && form.get('price')?.invalid">
-          Le prix est requis et doit être ≥ 0.
+          Le prix est requis 
         </div>
       </div>
+      <!-- Quantité / Stock -->
+<div class="form-group">
+  <label>Stock:</label>
+  <input type="number" formControlName="stock" placeholder="0" min="0" />
+</div>
 
       <!-- Catégorie -->
       <div class="form-group">

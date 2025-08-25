@@ -1,5 +1,21 @@
 <div class="products-grid">
   <div class="card product-card" >
+    
+    <!-- Badge de status -->
+   <!-- Badge de status -->
+<span 
+  class="product-status"
+  [ngClass]="{
+    'in-stock': product.stock > 10,
+    'low-stock': product.stock > 0 && product.stock <= 10,
+    'precommande': product.stock === 0
+  }">
+  {{ product.stock > 10 ? 'En stock' : (product.stock > 0 ? 'Stock limité' : 'Sur Commande') }}
+</span>
+
+
+
+
     <img [src]="product.image" class="card-img-top" alt="Product Image">
     <div class="card-body text-center">
       <h5 class="card-title">{{ product.name }}</h5>
@@ -23,8 +39,6 @@
     </div>
   </div>
 </div>
-
-
 
 <!-- Modal produit -->
 <!-- Modal produit -->
