@@ -80,4 +80,5 @@ export class AddprodComponent implements OnInit {
   fermer() {
     this.close.emit();
   }
+  
 }

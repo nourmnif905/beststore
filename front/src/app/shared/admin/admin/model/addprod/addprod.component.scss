@@ -16,7 +16,10 @@
   min-width: 350px;
   max-width: 500px;
   width: 90%;
+  max-height: 80vh;   /* hauteur max relative à la fenêtre */
+  overflow-y: auto;   /* scroll vertical si dépasse */
   animation: slideDown 0.3s ease;
+  box-sizing: border-box; /* pour inclure padding dans la hauteur */
 }
 
 @keyframes slideDown {
