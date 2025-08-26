@@ -1,44 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RequestService } from 'src/app/service/request.service';
-import { ProductPageComponent } from "../product/product-page/product-page/product-page.component";
-import { CommonModule, TitleCasePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { ProductPageComponent } from '../product/product-page/product-page/product-page.component';
 import { ProductCardComponent } from '../product/product-card/product-card/product-card.component';
 
 @Component({
   selector: 'app-category-component',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss'],
-  imports: [ProductPageComponent,TitleCasePipe,ReactiveFormsModule,CommonModule,ProductCardComponent],
+  standalone: true,
+  imports: [ProductPageComponent, ReactiveFormsModule, CommonModule, ProductCardComponent],
 })
-export class CategoryComponent  implements OnInit {
+export class CategoryComponent implements OnInit {
   products: any[] = [];
+  attributes: any[] = [];
   filterForm!: FormGroup;
   maxLimit: number = 10000;
   categorySlug: string | null = null;
+  categoryId!: string; // sera défini dynamiquement
+
+  selectedAttributes: { [key: string]: string[] } = {};
 
   constructor(
     private route: ActivatedRoute,
     private requestService: RequestService
   ) {}
 
-ngOnInit(): void {
-  this.initForm(); // d’abord initialiser le formulaire
-  this.loadMaxPrice();
+  ngOnInit(): void {
+    this.initForm();
+    this.loadMaxPrice();
 
-  this.route.paramMap.subscribe(params => {
-    this.categorySlug = params.get('categorySlug');
-    console.log('Slug:', this.categorySlug);
+    this.route.paramMap.subscribe(params => {
+      this.categorySlug = params.get('categorySlug');
+      if (this.categorySlug) {
+        this.loadCategory(); // 🔥 récupérer l'ID dynamique
+      }
 
-    // Charger les produits **après** avoir récupéré le slug et avoir initialisé le form
-    this.loadProducts();
-
-    // Réagir aux changements du filtre
-    this.filterForm.valueChanges.subscribe(() => this.loadProducts());
-  });
-}
-
+      this.filterForm.valueChanges.subscribe(() => this.loadProducts());
+    });
+  }
 
   initForm(): void {
     this.filterForm = new FormGroup({
@@ -46,6 +48,45 @@ ngOnInit(): void {
       minPrice: new FormControl(0),
       maxPrice: new FormControl(this.maxLimit),
       orderBy: new FormControl('price_asc'),
+    });
+  }
+
+  loadCategory(): void {
+    this.requestService.get('category/get_all').subscribe({
+      next: (categories: any[]) => {
+        const category = categories.find(c => c.name === this.categorySlug);
+        if (category) {
+          this.categoryId = category.id;
+          this.loadAttributesAndSpecs();
+          this.loadProducts(); // charger les produits après avoir défini l'ID
+        }
+      },
+      error: err => console.error('Erreur chargement categories', err)
+    });
+  }
+
+  loadAttributesAndSpecs(): void {
+    this.requestService.get(`category-attributes/category/${this.categoryId}`).subscribe({
+      next: (res: any[]) => {
+        console.log(res);
+        
+        this.attributes = res.map(attr => ({ ...attr, open: false, values: [] }));
+
+        this.attributes.forEach(attr => {
+          this.requestService.get(`product-specification/by-attribute/${attr.id}`).subscribe({
+            next: (specs: any[]) => {
+              console.log(specs);
+              
+              attr.values = specs.map(s => ({
+                value: s.value ,
+                //count: s.count || 0
+              }));
+            },
+            error: err => console.error('Erreur chargement valeurs attr', attr.id, err),
+          });
+        });
+      },
+      error: err => console.error('Erreur chargement attributs', err)
     });
   }
 
@@ -60,20 +101,35 @@ ngOnInit(): void {
   }
 
   loadProducts(): void {
+    if (!this.categoryId) return; // attendre que l'ID soit défini
+
     const filters = {
       prefix: this.filterForm.value.prefix,
       minPrice: this.filterForm.value.minPrice,
       maxPrice: this.filterForm.value.maxPrice,
-      orderBy: this.filterForm.value.orderBy as
-        'name_asc' | 'name_desc' | 'price_asc' | 'price_desc' | 'in_stock',
-      categoryName: this.categorySlug
+      orderBy: this.filterForm.value.orderBy,
+      categoryName: this.categorySlug,
+      attributes: this.selectedAttributes
     };
 
-    console.log('Param filtres API :', filters);
     this.requestService.get('products/search-filter', filters).subscribe({
       next: (res: any) => (this.products = res),
       error: (err) => console.error('Erreur lors du fetch produits', err),
     });
+  }
+
+  onAttributeChange(attrId: string, value: string, event: any) {
+    if (!this.selectedAttributes[attrId]) {
+      this.selectedAttributes[attrId] = [];
+    }
+
+    if (event.target.checked) {
+      this.selectedAttributes[attrId].push(value);
+    } else {
+      this.selectedAttributes[attrId] = this.selectedAttributes[attrId].filter(v => v !== value);
+    }
+
+    this.loadProducts();
   }
 
   onMinPriceChange(event: any): void {

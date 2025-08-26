@@ -1,59 +1,65 @@
 .container {
-   display: flex;
+  display: flex;
   gap: 40px;
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
 }
 
+/* --- Carte Filtres --- */
 .filter-card {
-  flex: 0 0 280px; /* filtre moins large */
-  background: #f9f9f9;
+  flex: 0 0 280px;
+  background: #f0efef;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 5px rgb(0 0 0 / 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   height: fit-content;
-
+  border: 1px solid #eee;
 }
-
-.product-list {
-  flex: 1;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 3 cartes max */
-  gap: 20px;
-}
-
-
 
 .filter-title {
-  margin-bottom: 15px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 8px;
 }
 
+/* --- Groupes de filtres --- */
 .filter-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .filter-group label {
-  font-weight: 500;
-  margin-bottom: 5px;
-  color: #555;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+  font-size: 14px;
 }
 
 .filter-group input[type="text"],
 .filter-group select {
-  padding: 6px 10px;
-  border: 1px solid #ccc;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
   border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease-in-out;
 }
 
+.filter-group input[type="text"]:focus,
+.filter-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* --- Slider prix --- */
 .price-slider {
   position: relative;
   height: 60px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .price-slider input[type="range"] {
@@ -76,14 +82,15 @@ input[type="range"]::-webkit-slider-thumb {
   background: #007bff;
   cursor: pointer;
   -webkit-appearance: none;
-  margin-top: -5px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .slider-track {
   position: absolute;
   height: 6px;
   width: 100%;
-  background: #ddd;
+  background: #e5e5e5;
   top: 50%;
   transform: translateY(-50%);
   border-radius: 3px;
@@ -111,15 +118,65 @@ input[type="range"]::-webkit-slider-thumb {
   position: absolute;
   background-color: #fff;
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 12px;
   color: #333;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
   transform: translateX(-50%);
   white-space: nowrap;
 }
 
+/* --- Attributs dynamiques --- */
+.attribute-header {
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
 
+.attribute-values {
+  padding: 6px 4px 6px 8px;
+}
+
+.checkbox-item {
+  margin: 5px 0;
+}
+
+.checkbox-item label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* pousse (0) à droite */
+  width: 100%;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+}
+
+.checkbox-item input {
+  margin-right: 6px; /* espace entre case et valeur */
+}
+
+.value {
+  margin-right: auto; /* colle la valeur à gauche avec la checkbox */
+  font-weight: 500;
+  color: #444;
+}
+
+.count {
+  font-size: 13px;
+  color: #777;
+}
+
+.arrow {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* --- Produits --- */
 .product-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

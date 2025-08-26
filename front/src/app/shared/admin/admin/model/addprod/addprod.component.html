@@ -40,19 +40,20 @@
         <label>Prix (€):</label>
         <input type="number" formControlName="price" placeholder="0" />
         <div class="error" *ngIf="form.get('price')?.touched && form.get('price')?.invalid">
-          Le prix est requis 
+          Le prix est requis.
         </div>
       </div>
-      <!-- Quantité / Stock -->
-<div class="form-group">
-  <label>Stock:</label>
-  <input type="number" formControlName="stock" placeholder="0" min="0" />
-</div>
+
+      <!-- Stock -->
+      <div class="form-group">
+        <label>Stock:</label>
+        <input type="number" formControlName="stock" placeholder="0" min="0" />
+      </div>
 
       <!-- Catégorie -->
       <div class="form-group">
         <label>Catégorie:</label>
-        <select formControlName="category">
+        <select formControlName="category" (change)="onCategoryChange($event)">
           <option value="" disabled>Choisir une catégorie</option>
           <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
         </select>
@@ -60,6 +61,19 @@
           La catégorie est requise.
         </div>
       </div>
+
+     <!-- Attributs dynamiques -->
+<div *ngFor="let attr of categoryAttributes" class="form-group">
+  <label>{{ attr.name }}:</label>
+
+  <!-- Toujours un input texte -->
+  <input type="text" [formControlName]="attr.name" placeholder="Entrez {{ attr.name }}" />
+
+  <div class="error" *ngIf="form.get(attr.name)?.touched && form.get(attr.name)?.invalid">
+    {{ attr.name }} est requis.
+  </div>
+</div>
+
 
       <!-- Boutons -->
       <div class="buttons">
