@@ -72,6 +72,7 @@ model Cart {
   createdAt DateTime   @default(now())
   isOrdered Boolean    @default(false)
   items     CartItem[] // 👈 Relation inverse
+  commandes  Commande[]  // 👈 Optional relation to Commande
 }
 
 model CartItem {
@@ -83,4 +84,16 @@ model CartItem {
 
   cart      Cart     @relation(fields: [cartId], references: [id])
   product   Product  @relation(fields: [productId], references: [id])
+}
+model Commande {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String   // Client name
+  phoneNumber  Int   // Client phone number
+  mail        String  // Client email  // Total amount of the order
+  status       String @default("PENDING")    // e.g., PENDING, COMPLETED, CANCELLED
+  localisation String   // Address or location
+  createdAt    DateTime @default(now())
+
+  cartId       String   @db.ObjectId
+  cart         Cart     @relation(fields: [cartId], references: [id])
 }

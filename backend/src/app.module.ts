@@ -6,6 +6,7 @@ import { CategoryModule } from './category/category.module';
 import { CartModule } from './Cart/cart.module';
 import { CategoryAttributeModule } from './category-attribute/category-attribute.module';
 import { ProductSpecificationModule } from './product-specification/product-specification.module';
+import { CommandeModule } from './commande/commande.module';
 @Module({
   imports: [ProductModule,CartModule,
      
@@ -15,6 +16,7 @@ import { ProductSpecificationModule } from './product-specification/product-spec
     PrismaModule,
     CategoryModule,
     CategoryAttributeModule,
-    ProductSpecificationModule,],
+    ProductSpecificationModule,
+    CommandeModule,],
 })
 export class AppModule {}
