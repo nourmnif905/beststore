@@ -17,14 +17,23 @@ export class CommandeService {
 
     // Create commande
     const commande = await this.prisma.commande.create({
-      data: {
-        name: dto.name,
-        phoneNumber: dto.phoneNumber,
-        mail: dto.mail,
-        localisation: dto.localisation,
-        cart: { connect: { id: dto.cartId } },
+  data: {
+    name: dto.name,
+    phoneNumber: dto.phoneNumber,
+    mail: dto.mail,
+    localisation: dto.localisation,
+    cart: { connect: { id: dto.cartId } },
+  },
+  include: {
+    cart: {
+      include: {
+        items: {
+          include: { product: true },
+        },
       },
-    });
+    },
+  },
+});
 
     // Mark cart as ordered
     await this.prisma.cart.update({
