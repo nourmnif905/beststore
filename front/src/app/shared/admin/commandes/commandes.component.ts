@@ -15,6 +15,7 @@ export class CommandesComponent implements OnInit {
   loading = false;
 
   constructor(private requestService: RequestService) {}
+
   ngOnInit(): void {
     this.getAllCommandes();
   }

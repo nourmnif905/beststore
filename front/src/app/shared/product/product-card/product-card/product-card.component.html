@@ -25,7 +25,7 @@
       </p>
       <div *ngIf="!adminMode" class="d-flex justify-content-center align-items-center gap-3 mt-3">
         <p class="price mb-0">{{ product.price }} <small>TND</small></p>
-        <button class="btn btn-primary btn-cart px-3" (click)="addToCart(product.id)">
+        <button class="btn btn-primary btn-cart px-3" (click)="addToCart()">
           <i class="fa fa-shopping-cart"></i> Ajouter
         </button>
       </div>

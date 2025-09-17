@@ -21,7 +21,7 @@
           </div>
           <p class="cart-item-price">{{ item.product?.price }} DT x {{ item.quantity }}</p>
         </div>
-        <button class="remove-item-btn" (click)="removeFromCart(item.id)">🗑</button>
+        <button class="remove-item-btn" (click)="removeFromCart(item.product.id)">🗑</button>
       </div>
     </div>
 

@@ -9,20 +9,17 @@ import { CartService } from 'src/app/service/services/cart.service';
   styleUrls: ['./product-card.component.scss'],
   imports: [CommonModule]
 })
-
 export class ProductCardComponent {
-  
   @Input() product!: Product;
-  @Input() adminMode: boolean = false; // true si c'est dans l'admin
+  @Input() adminMode: boolean = false;
   @Output() edit = new EventEmitter<Product>();
   @Output() delete = new EventEmitter<Product>();
-  ProductStatus = status; 
   showModal = false;
 
   constructor(private cartService: CartService) {}
 
   openModal(event: MouseEvent) {
-    event.preventDefault(); // empêche le scroll en haut
+    event.preventDefault();
     this.showModal = true;
   }
 
@@ -30,18 +27,14 @@ export class ProductCardComponent {
     this.showModal = false;
   }
 
-  addToCart(productId: string) {
-  this.cartService.addToCart(productId, 1)
-    .then(() => {
-      console.log('Produit ajouté au panier:', productId);
-      alert('Produit ajouté au panier'); // ou toastr
-    })
-    .catch(err => {
-      console.error('Erreur ajout panier:', err);
-      alert('Impossible d’ajouter le produit au panier');
-    });
-}
+  // ✅ Ajout dans le panier localStorage
+  addToCart() {
+    if (!this.product) return;
 
+    this.cartService.addToCart(this.product, 1); // produit complet
+    console.log('Produit ajouté au panier (localStorage) :', this.product);
+    alert('Produit ajouté au panier');
+  }
 
   onEdit() {
     this.edit.emit(this.product);
