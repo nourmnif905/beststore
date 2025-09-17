@@ -70,27 +70,23 @@ export class CommandeService {
     if (!commande) throw new NotFoundException('Commande not found');
     return commande;
   }
-  async getProductsInCommande(commandeId: string) {
-  const commande = await this.prisma.commande.findUnique({
-    where: { id: commandeId },
+async getProductsInCart(cartId: string) {
+  const cart = await this.prisma.cart.findUnique({
+    where: { id: cartId },
     include: {
-      cart: {
+      items: {
         include: {
-          items: {
-            include: {
-              product: true,
-            },
-          },
+          product: true,
         },
       },
     },
   });
 
-  if (!commande) {
-    throw new NotFoundException('Commande not found');
+  if (!cart) {
+    throw new NotFoundException('Cart not found');
   }
 
-  const result = commande.cart.items.map((item) => ({
+  const result = cart.items.map((item) => ({
     productName: item.product.name,
     productId: item.product.id,
     quantity: item.quantity,

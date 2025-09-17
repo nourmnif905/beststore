@@ -23,6 +23,6 @@ export class CommandeController {
   }
   @Get('getProducts/:id')
 async getCommandeProducts(@Param('id') id: string) {
-  return this.commandeService.getProductsInCommande(id);
+  return this.commandeService.getProductsInCart(id);
 }
 }
