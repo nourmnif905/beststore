@@ -22,37 +22,39 @@ async createCart() {
 }
 
   // ✅ Ajouter un produit dans le panier
-  async addItemToCart(cartId: string, productId: string, quantity: number) {
-    if (quantity <= 0) {
-      throw new BadRequestException('Quantity must be greater than 0');
+ async addItemToCart(cartId: string, productId: string, quantity: number) {
+  if (quantity <= 0) {
+    throw new BadRequestException('Quantity must be greater than 0');
+  }
+
+  // Vérifier si le panier existe
+  const cart = await this.prisma.cart.findUnique({ where: { id: cartId } });
+  if (!cart) throw new NotFoundException('Cart not found');
+
+  // Vérifier si le produit existe
+  const product = await this.prisma.product.findUnique({ where: { id: productId } });
+  if (!product) throw new NotFoundException('Product not found');
+
+  // Vérifier stock
+  const existingItem = await this.prisma.cartItem.findFirst({
+    where: { cartId, productId },
+  });
+
+  if (existingItem) {
+    if (product.stock < existingItem.quantity + quantity) {
+      throw new BadRequestException('Not enough stock available');
     }
 
-    const cart = await this.prisma.cart.findUnique({
-      where: { id: cartId },
+    await this.prisma.cartItem.update({
+      where: { id: existingItem.id },
+      data: { quantity: existingItem.quantity + quantity },
     });
-    if (!cart) {
-      throw new NotFoundException('Cart not found');
+  } else {
+    if (product.stock < quantity) {
+      throw new BadRequestException('Not enough stock available');
     }
 
-    const product = await this.prisma.product.findUnique({
-      where: { id: productId },
-    });
-    if (!product) {
-      throw new NotFoundException('Product not found');
-    }
-
-    const existingItem = await this.prisma.cartItem.findFirst({
-      where: { cartId, productId },
-    });
-
-    if (existingItem) {
-      return this.prisma.cartItem.update({
-        where: { id: existingItem.id },
-        data: { quantity: existingItem.quantity + quantity },
-      });
-    }
-
-    return this.prisma.cartItem.create({
+    await this.prisma.cartItem.create({
       data: {
         cartId,
         productId,
@@ -60,6 +62,18 @@ async createCart() {
       },
     });
   }
+
+  // 🔥 Retourner le panier complet avec ses produits
+  return this.prisma.cart.findUnique({
+    where: { id: cartId },
+    include: {
+      items: {
+        include: { product: true },
+      },
+    },
+  });
+}
+
 
   // ✅ Récupérer un panier avec ses produits
   async getCart(cartId: string) {
