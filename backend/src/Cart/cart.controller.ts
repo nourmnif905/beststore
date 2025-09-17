@@ -19,12 +19,12 @@ export class CartController {
   }
 
   // ✅ Ajouter un produit au panier
-  @Post('add/:cartId/items')
+  @Post('add/items')
   addItem(
-    @Param('cartId') cartId: string,
-    @Body() body: { productId: string; quantity: number },
+
+    @Body() body: { cartId: string ;productId: string; quantity: number },
   ) {
-    return this.cartService.addItemToCart(cartId, body.productId, body.quantity);
+    return this.cartService.addItemToCart(body.cartId, body.productId, body.quantity);
   }
 
   // ✅ Récupérer tous les produits d’un panier
