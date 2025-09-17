@@ -31,8 +31,17 @@ export class ProductCardComponent {
   }
 
   addToCart(productId: string) {
-    this.cartService.addToCart(productId);
-  }
+  this.cartService.addToCart(productId, 1)
+    .then(() => {
+      console.log('Produit ajouté au panier:', productId);
+      alert('Produit ajouté au panier'); // ou toastr
+    })
+    .catch(err => {
+      console.error('Erreur ajout panier:', err);
+      alert('Impossible d’ajouter le produit au panier');
+    });
+}
+
 
   onEdit() {
     this.edit.emit(this.product);

@@ -21,22 +21,28 @@ export class CartService {
       );
 
       console.log('Réponse cart/create:', res); // Debug
-      this.cartId = res.id; // OK car res = {id: "..."}
+      this.cartId = res.id; 
 
     }
   }
 
-  // ✅ Ajouter un produit au panier
-  async addToCart(productId: string, quantity: number = 1): Promise<void> {
-    await this.initCart();
-    await firstValueFrom(
-      this.requestService.post(`cart/${this.cartId}/items`, {
-        productId,
-        quantity,
-      })
-    );
-    await this.refreshCartItems();
-  }
+async addToCart(productId: string, quantity: number = 1): Promise<void> {
+  // Assure-toi que le panier existe
+  await this.initCart();
+  if (!this.cartId) throw new Error('Aucun panier disponible');
+
+  // Appel à l'API cart/add/items avec le body complet
+  await firstValueFrom(
+    this.requestService.post(`cart/add/items`, {
+      cartId: this.cartId,
+      productId,
+      quantity,
+    })
+  );
+
+  // Met à jour le panier local
+  await this.refreshCartItems();
+}
 
   // ✅ Récupérer le contenu du panier
   async refreshCartItems(): Promise<void> {

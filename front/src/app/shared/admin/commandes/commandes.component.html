@@ -6,28 +6,29 @@
   <table *ngIf="!loading && commandes.length > 0">
     <thead>
       <tr>
-        
+        <th>ID</th>
         <th>Nom</th>
         <th>Email</th>
         <th>Téléphone</th>
         <th>Localisation</th>
-        
+        <th>Cart ID</th>
         <th>Statut</th>
         <th>Produits</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let commande of commandes">
-        
+        <td>{{commande.id}}</td>
         <td>{{commande.name}}</td>
         <td>{{commande.mail}}</td>
         <td>{{commande.phoneNumber}}</td>
         <td>{{commande.localisation}}</td>
+        <td>{{commande.cartId}}</td>
         <td>{{commande.status}}</td>
         <td>
           <ul>
-            <li *ngFor="let item of commande.items">
-              {{item.product.name}} x {{item.quantity}}
+            <li *ngFor="let item of commande.products">
+              {{item.product?.name || item.productName}} x {{item.quantity}}
             </li>
           </ul>
         </td>
