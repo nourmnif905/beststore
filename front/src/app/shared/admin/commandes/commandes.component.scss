@@ -1,14 +1,11 @@
-:root {
-  color-scheme: light;
-}
-
 .commandes-container {
   padding: 20px;
   font-family: Arial, sans-serif;
+  color: #000 !important; /* Forcer le texte en noir */
 
   h2 {
     margin-bottom: 20px;
-    color: #333;
+    color: #333 !important; /* Forcer h2 en gris foncé */
   }
 
   table {
@@ -16,6 +13,7 @@
     border-collapse: collapse;
     background: #fff;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    color: #000 !important; /* Forcer texte du tableau en noir */
 
     thead {
       background-color: #007bff;
@@ -38,6 +36,7 @@
         td {
           padding: 10px;
           vertical-align: top;
+          color: #000 !important; /* Forcer texte des cellules en noir */
 
           ul {
             margin: 0;
@@ -45,6 +44,7 @@
 
             li {
               list-style-type: disc;
+              color: #000 !important; /* Forcer texte des listes en noir */
             }
           }
         }
@@ -53,7 +53,7 @@
   }
 
   div {
-    color: #555;
+    color: #555 !important;
     font-style: italic;
   }
 }
