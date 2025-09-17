@@ -13,7 +13,7 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   // ✅ Créer un panier (vide)
-  @Post()
+  @Post('create')
   createCart() {
     return this.cartService.createCart();
   }

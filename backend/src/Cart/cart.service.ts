@@ -11,11 +11,15 @@ export class CartService {
   constructor(private prisma: PrismaService) {}
 
   // ✅ Créer un panier vide
-  async createCart() {
-    return this.prisma.cart.create({
-      data: {},
-    });
-  }
+async createCart() {
+  const cart = await this.prisma.cart.create({
+    data: {},
+    select: {
+      id: true, // on récupère uniquement l'ID
+    },
+  });
+  return cart.id; // retourne directement l'ID
+}
 
   // ✅ Ajouter un produit dans le panier
   async addItemToCart(cartId: string, productId: string, quantity: number) {
