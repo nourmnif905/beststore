@@ -19,7 +19,7 @@ export class CartController {
   }
 
   // ✅ Ajouter un produit au panier
-  @Post(':cartId/items')
+  @Post('add/:cartId/items')
   addItem(
     @Param('cartId') cartId: string,
     @Body() body: { productId: string; quantity: number },
