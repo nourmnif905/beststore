@@ -22,7 +22,11 @@ export const routes: Routes = [
   {
     path: 'category/:categorySlug',
     loadComponent: () => import('./category/category.page').then( m => m.CategoryPage)
+  },  {
+    path: 'commandes',
+    loadComponent: () => import('./admin/commandes/commandes.page').then( m => m.CommandesPage)
   },
+
 
 
 

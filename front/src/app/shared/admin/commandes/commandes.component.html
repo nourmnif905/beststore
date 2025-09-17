@@ -1,0 +1,41 @@
+<div class="commandes-container">
+  <h2>Liste des commandes</h2>
+
+  <div *ngIf="loading">Chargement...</div>
+
+  <table *ngIf="!loading && commandes.length > 0">
+    <thead>
+      <tr>
+        
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Localisation</th>
+        
+        <th>Statut</th>
+        <th>Produits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let commande of commandes">
+        
+        <td>{{commande.name}}</td>
+        <td>{{commande.mail}}</td>
+        <td>{{commande.phoneNumber}}</td>
+        <td>{{commande.localisation}}</td>
+        <td>{{commande.status}}</td>
+        <td>
+          <ul>
+            <li *ngFor="let item of commande.items">
+              {{item.product.name}} x {{item.quantity}}
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && commandes.length === 0">
+    Aucune commande trouvée.
+  </div>
+</div>

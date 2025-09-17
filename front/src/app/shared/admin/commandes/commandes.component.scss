@@ -1,0 +1,55 @@
+.commandes-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    thead {
+      background-color: #007bff;
+      color: #fff;
+      
+      th {
+        padding: 12px 10px;
+        text-align: left;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #ddd;
+
+        &:hover {
+          background-color: #f1f1f1;
+        }
+
+        td {
+          padding: 10px;
+          vertical-align: top;
+
+          ul {
+            margin: 0;
+            padding-left: 20px;
+
+            li {
+              list-style-type: disc;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  div {
+    color: #555;
+    font-style: italic;
+  }
+}

@@ -1,8 +1,7 @@
-
 <div id="cartModal" class="modal-backdrop" (click)="onCloseClick()"></div>
 <div class="cart-modal">
   <div class="cart-modal-content">
-    
+
     <!-- En-tête -->
     <div class="cart-modal-header">
       <h3>🛒 Panier</h3>
@@ -12,28 +11,20 @@
     <!-- Liste des produits -->
     <div class="cart-items" *ngIf="cartItems.length > 0; else emptyCart">
       <div class="cart-item" *ngFor="let item of cartItems">
-  <img [src]="item.product?.image" alt="Produit" width="60" height="60" />
-
-  <div class="cart-item-info">
-    <h5 class="cart-item-title">{{ item.product?.name }}</h5>
-
-    <div class="quantity-control">
-      <button class="qty-btn small minus" (click)="decreaseQuantity(item)">−</button>
-      <span class="qty-value">{{ item.quantity }}</span>
-      <button class="qty-btn small plus" (click)="increaseQuantity(item)">+</button>
+        <img [src]="item.product?.image" alt="Produit" width="60" height="60" />
+        <div class="cart-item-info">
+          <h5 class="cart-item-title">{{ item.product?.name }}</h5>
+          <div class="quantity-control">
+            <button class="qty-btn small minus" (click)="decreaseQuantity(item)">−</button>
+            <span class="qty-value">{{ item.quantity }}</span>
+            <button class="qty-btn small plus" (click)="increaseQuantity(item)">+</button>
+          </div>
+          <p class="cart-item-price">{{ item.product?.price }} DT x {{ item.quantity }}</p>
+        </div>
+        <button class="remove-item-btn" (click)="removeFromCart(item.id)">🗑</button>
+      </div>
     </div>
 
-    <p class="cart-item-price">
-      {{ item.product?.price }} DT x {{ item.quantity }}
-    </p>
-  </div>
-
-  <button class="remove-item-btn" (click)="removeFromCart(item.id)">🗑</button>
-</div>
-
-    </div>
-
-    <!-- Si panier vide -->
     <ng-template #emptyCart>
       <p class="empty-cart-text">Votre panier est vide.</p>
     </ng-template>
@@ -47,46 +38,25 @@
 
       <button class="confirm-btn" (click)="toggleConfirmForm()">Confirmer la commande</button>
 
-      <!-- Formulaire Email + Téléphone stylisé dans une carte -->
-<div *ngIf="showConfirmForm" class="card-confirmation">
-  <h5 class="card-title">Finaliser votre commande</h5>
+      <!-- Formulaire finalisation -->
+      <div *ngIf="showConfirmForm" class="card-confirmation">
+        <h5 class="card-title">Finaliser votre commande</h5>
 
-  <input
-    type="email"
-    placeholder="Email"
-    [formControl]="emailControl"
-    class="form-input"
-  />
-  <div
-    *ngIf="orderForm.get('email')?.invalid && orderForm.get('email')?.touched"
-    class="error"
-  >
-    Email invalide
-  </div>
+        <input type="text" placeholder="Nom complet" [formControl]="nameControl" class="form-input" />
+        <div *ngIf="orderForm.get('name')?.invalid && orderForm.get('name')?.touched" class="error">Nom requis</div>
 
-  <input
-    type="tel"
-    placeholder="Téléphone"
-    [formControl]="phoneControl"
-    class="form-input"
-    maxlength="13" pattern="[0-9]*"
-    inputmode="numeric" (keypress)="$event.charCode >= 48 && $event.charCode <= 57"
-  />
-  <div
-    *ngIf="orderForm.get('phone')?.invalid && orderForm.get('phone')?.touched"
-    class="error"
-  >
-    Numéro de téléphone invalide
-  </div>
+        <input type="email" placeholder="Email" [formControl]="emailControl" class="form-input" />
+        <div *ngIf="orderForm.get('email')?.invalid && orderForm.get('email')?.touched" class="error">Email invalide</div>
 
-  <button
-    (click)="confirmOrder()"
-    [disabled]="orderForm.invalid"
-    class="confirm-btn"
-  >
-    Envoyer
-  </button>
-</div>
+        <input type="tel" placeholder="Téléphone" [formControl]="phoneControl" class="form-input"
+          maxlength="8" pattern="[0-9]*" inputmode="numeric" (keypress)="$event.charCode >= 48 && $event.charCode <= 57" />
+        <div *ngIf="orderForm.get('phone')?.invalid && orderForm.get('phone')?.touched" class="error">Numéro de téléphone invalide</div>
+
+        <input type="text" placeholder="Localisation" [formControl]="localisationControl" class="form-input" />
+        <div *ngIf="orderForm.get('localisation')?.invalid && orderForm.get('localisation')?.touched" class="error">Localisation requise</div>
+
+        <button (click)="confirmOrder()" [disabled]="orderForm.invalid" class="confirm-btn">Envoyer</button>
+      </div>
 
     </div>
     

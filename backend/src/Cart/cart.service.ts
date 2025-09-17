@@ -18,7 +18,7 @@ async createCart() {
       id: true, // on récupère uniquement l'ID
     },
   });
-  return cart.id; // retourne directement l'ID
+   return { id: cart.id }; // retourne directement l'ID
 }
 
   // ✅ Ajouter un produit dans le panier
